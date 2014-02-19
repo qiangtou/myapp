@@ -150,8 +150,10 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<version>6.1.26</version>
 				<configuration>
-					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<contextPath>/</contextPath>
+					<scanIntervalSeconds>5</scanIntervalSeconds>
+					<!-- jetty 在修改静态文件时解除锁定 -->
+					<webDefaultXml>src/main/resources/webdefault.xml</webDefaultXml>  
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
 							<port>8080</port>
@@ -161,6 +163,15 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                <exclude>**/webdefault.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
 		<finalName>my-webapp</finalName>
 	</build>
 </project>

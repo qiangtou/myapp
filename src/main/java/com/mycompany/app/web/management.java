@@ -20,7 +20,7 @@ public class management {
 	@RequestMapping(value="/index.do")
 	public ModelAndView hello1(){
 		ModelAndView mv=new ModelAndView("management");
-		List deptList= deptService.getDeptList(1);
+		List deptList= deptService.getDeptList();
 		mv.addObject("deptList", deptList);
 		return mv;
 	}

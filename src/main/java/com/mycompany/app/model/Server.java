@@ -12,18 +12,19 @@ public class Server {
 	@Id	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ID")
-	private Integer Id;
+	private Integer id;
 	@Column(name="IPAddr")
 	private String ipAddr;
 	private byte isValid;
 	private byte isEnhance;
 	@Column(name="dept_id")
 	private Integer deptId;
+	
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getIpAddr() {
 		return ipAddr;
@@ -48,5 +49,9 @@ public class Server {
 	}
 	public void setDeptId(Integer deptId) {
 		this.deptId = deptId;
+	}
+	@Override
+	public String toString() {
+		return "Server [Id=" + id + ", deptId=" + deptId + ", ipAddr=" + ipAddr + ", isEnhance=" + isEnhance + ", isValid=" + isValid + "]";
 	}
 }

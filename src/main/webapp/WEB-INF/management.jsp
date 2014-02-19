@@ -26,33 +26,26 @@
 			</div>
 
 			<div>
-				<div
-					style="float: left; border: 2px solid grey; width: 20%; height: 400px; overflow-y: auto; text-align: left; vertical-align: middle"
+				<div style="float: left; border: 2px solid grey; width: 20%; height: 400px; overflow-y: auto; text-align: left; vertical-align: middle"
 					id="menuList">
 					<c:forEach var="dept" items="${deptList}">
 						<div class="depts" id="${dept.deptId }"
 							deptData="${dept.cname },${dept.deptNo },${dept.dsc }"
-							style="cursor: pointer"">
-							<img id="img1" src="/images/subheader_expand.png" align="middle">
-							<span id="span1">${dept.cname }</span>
+							style="cursor: pointer">
+							<img id="img${dept.deptId }" src="/images/subheader_expand.png" align="middle">
+							<span id="span${dept.deptId}">${dept.cname }</span>
 						</div>
-						<div id="menu${dept.deptId}" style="display: none">
-							<li id="1">
-								<a href="javascript:void(0)" id="192.168.1.61">192.168.1.61</a>
-							</li>
-						</div>
+						<div id="menu${dept.deptId}" style="display: none"></div>
 					</c:forEach>
 				</div>
-				<div id='content'
-					style="border: 2px solid grey; width: 79%; height: 400px;">
-
+				<div id='content' style="border: 2px solid grey; width: 79%; height: 400px;">
 				</div>
 			</div>
 		</div>
-		<script id='deptTEMP' type="templete">
+		<script id='deptTEMP' type="template">
 		<div style="width: 100%; height: 50px">
 			<div style="float: left">
-				<p id="ip_addr" style="padding: 10px 20px; color: red; text-align: left">{title}</p>
+				<p id="title" style="padding: 10px 20px; color: red; text-align: left">{title}</p>
 			</div>
 			<div id="operate" style="float: right; padding: 10px 20px">
 				<input type="button" class="action" value="{action}">
@@ -87,7 +80,7 @@
 			</table>
 		</div>
 				</script>
-		<script id='serverTEMP' type="templete">
+		<script id='addServerTEMP' type="template">
 		<div style="width: 100%; height: 50px">
 			<div style="float: left">
 				<p id="ip_addr" style="padding: 10px 20px; color: red; text-align: left">{title}</p>
@@ -118,6 +111,43 @@
 				</tbody>
 			</table>
 		</div>
+<div id="showResult" style="padding:10px 20px">
 				</script>
+				<script id='deptListTEMP' type="template">
+				<div class="depts" id="{deptId}" deptData="{deptData}" style="cursor: pointer" >
+					<img id="img{deptId}" src="/images/subheader_expand.png" align="middle">
+					<span id="span{deptId}">{cname}</span>
+				</div>
+				<div id="menu{deptId}" style="display: none">
+				</div>
+				</script>
+				<script id='serverListTEMP' type="template">
+				   <li>
+					<a id="server{id}" href="javascript:void(0)" >{ipAddr}</a>
+                   </li>
+				</script>
+				<script id='showServerTEMP' type="template">
+		  	<div style="width:100%;height:50px">
+		  		<div style="float:left">
+			 		 <p id="ipAddr" style="padding:10px 20px;color:red;text-align:left">{ipAddr}</p>
+			 	</div>
+			  <div id="operate" style="float:right;padding:10px 20px">
+
+<input type="button" id="updateServerBT" value="修改"/>
+<input type="button" id="activeServerBT" value="激活" />
+<input type="button" id="delServerBT" value="删除" />
+			</div>
+			  </div>
+<div id="showResult" style="padding:10px 20px">正在查询中，请稍候。。。</div>
+				</script>
+				<script id='serverStatusTEMP' type="template">
+		<p>正在转码数：{status1}</p>
+		<p>等待转码数：{status2}</p>
+		<p>正在分析数：{status3}</p>
+		<p>等待分析数：0</p>
+		<p>内存占用：34%</p>
+		<p>CPU占用：1%</p>
+		  		</script>
+
 	</body>
 </html>

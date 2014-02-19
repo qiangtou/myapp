@@ -15,8 +15,8 @@ public class DeptServiceImpl implements DeptService {
 	@Resource
 	private DeptDao deptDao;
 
-	public List<Dept> getDeptList(Integer deptId) {
-		return deptDao.getAll();
+	public List<Dept> getDeptList() {
+		return deptDao.getUnDeletedList();
 	}
 
 	public DeptDao getDeptDao() {
@@ -25,6 +25,17 @@ public class DeptServiceImpl implements DeptService {
 
 	public void setDeptDao(DeptDao deptDao) {
 		this.deptDao = deptDao;
+	}
+
+	public void saveOrUpdate(Dept dept) {
+		deptDao.saveOrUpdate(dept);
+	}
+
+	public void delete(Integer deptId) {
+		//修改删除状态
+		Dept dept=deptDao.find(deptId);
+		dept.setIsDelete(Dept.DELETE);
+		deptDao.update(dept);
 	}
 
 }

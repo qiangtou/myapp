@@ -11,6 +11,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name="ftzj_dept")
 public class Dept {
+	/**
+	 * 已删除状态
+	 */
+	public final static byte DELETE=1;
+	/*
+	 * 未删除状态
+	 */
+	public final static byte UN_DELETE=0;
+	
 	@Id	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="dept_id")
@@ -96,5 +105,11 @@ public class Dept {
 	}
 	public void setIsDelete(byte isDelete) {
 		this.isDelete = isDelete;
+	}
+	@Override
+	public String toString() {
+		return "Dept [cname=" + cname + ", createdDate=" + createdDate + ", deptId=" + deptId + ", deptNo=" + deptNo + ", dsc=" + dsc + ", fatherId="
+				+ fatherId + ", groupbttype=" + groupbttype + ", isDelete=" + isDelete + ", modifiedDate=" + modifiedDate + ", quanzongno=" + quanzongno
+				+ ", sortOrder=" + sortOrder + "]";
 	}
 }
