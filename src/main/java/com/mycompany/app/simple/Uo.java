@@ -1,4 +1,4 @@
-package com.mycompany.app.web;
+package com.mycompany.app.simple;
 
 public class Uo {
 	private String name;

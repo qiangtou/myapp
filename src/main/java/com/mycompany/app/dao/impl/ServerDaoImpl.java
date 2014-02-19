@@ -9,7 +9,6 @@ import com.mycompany.app.model.Server;
 
 @Repository("serverDao")
 public class ServerDaoImpl extends BaseDaoImpl<Server> implements ServerDao{
-	@Override
 	public List<Server> getServersByDeptId(Integer deptId) {
 		return getHibernateTemplate().find("from Server s where s.deptId=?",deptId);
 	}

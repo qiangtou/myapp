@@ -27,7 +27,6 @@ public class Server {
 		if(null!=deptId&&0<deptId){
 			list= serverService.getServerList(deptId);
 		}
-		System.out.println(list);
 		return list;
 	}
 	

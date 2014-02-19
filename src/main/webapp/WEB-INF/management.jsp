@@ -5,6 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="/js/lib/json2.js"></script>
 		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/manage.js"></script>
 		<title>分布式网管系统</title>

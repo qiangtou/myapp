@@ -15,7 +15,6 @@ public class ServerServiceImpl implements ServerService {
 	@Resource
 	private ServerDao serverDao;
 
-	@Override
 	public List<Server> getServerList(Integer deptId) {
 		return serverDao.getServersByDeptId(deptId);
 	}
@@ -28,7 +27,6 @@ public class ServerServiceImpl implements ServerService {
 		this.serverDao = serverDao;
 	}
 
-	@Override
 	public void saveOrUpdate(Server server) {
 		serverDao.saveOrUpdate(server);
 	}
