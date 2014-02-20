@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycompany.app.Vo.Result;
 import com.mycompany.app.Vo.Status;
+import com.mycompany.app.model.Server;
 import com.mycompany.app.service.ServerService;
 
 
 @Controller
 @RequestMapping("/server")
-public class Server {
-	private Logger logger=Logger.getLogger(Server.class);
+public class ServerController {
+	private Logger logger=Logger.getLogger(ServerController.class);
 	@Resource
 	private ServerService serverService;
 	
@@ -35,10 +36,18 @@ public class Server {
 	
 	@RequestMapping(value="/add.do",method=RequestMethod.POST)
 	@ResponseBody
-	public Result add(@RequestBody com.mycompany.app.model.Server server){
+	public Result add(@RequestBody Server server){
 		logger.info("add server");
 		serverService.saveOrUpdate(server);
-		return new Result(true,server);
+		return new Result(server);
+	}
+	
+	@RequestMapping(value="/del.do",method=RequestMethod.POST)
+	@ResponseBody
+	public Result del(@RequestBody Server server){
+		logger.info("del server"+server);
+		//TODO del server
+		return new Result(server);
 	}
 	
 	@RequestMapping(value="/status.do",method=RequestMethod.POST)
@@ -47,7 +56,16 @@ public class Server {
 		logger.info("get server status");
 		//TODO get server status
 		Status data = new Status(1,2,3);
-		return new Result(true,data);
+		return new Result(data);
+	}
+	
+	@RequestMapping(value="/active.do",method=RequestMethod.POST)
+	@ResponseBody
+	public Result active(@RequestBody Server server){
+		logger.info("active server status"+server);
+		//TODO active server status
+		serverService.active(server);
+		return new Result(true);
 	}
 	
 	

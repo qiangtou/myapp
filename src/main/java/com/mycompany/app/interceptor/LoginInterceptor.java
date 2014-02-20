@@ -20,7 +20,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();
 		Object user = session.getAttribute("user");
 		logger.info("enter login interceptor,user is " + user+",uri is "+uri);
-		if (null == user) {
+		if (null == user || "".equals(user)) {
 			request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 			return false;
 		}

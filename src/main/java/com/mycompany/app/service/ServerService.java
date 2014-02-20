@@ -8,4 +8,6 @@ public interface ServerService {
 	public List<Server> getServerList(Integer deptId);
 
 	public void saveOrUpdate(Server server);
+
+	public void active(Server server);
 }

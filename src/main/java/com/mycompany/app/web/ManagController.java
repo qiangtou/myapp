@@ -13,7 +13,7 @@ import com.mycompany.app.service.DeptService;
 
 @Controller
 @RequestMapping("/manage")
-public class management {
+public class ManagController {
 	@Resource
 	private DeptService deptService;
 	

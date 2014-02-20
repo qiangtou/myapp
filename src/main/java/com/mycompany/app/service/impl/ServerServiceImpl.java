@@ -30,4 +30,10 @@ public class ServerServiceImpl implements ServerService {
 	public void saveOrUpdate(Server server) {
 		serverDao.saveOrUpdate(server);
 	}
+
+	public void active(Server server) {
+		server =serverDao.find(server.getId());
+		server.setIsValid(Server.VALID);
+		saveOrUpdate(server);
+	}
 }

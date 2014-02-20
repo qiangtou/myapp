@@ -83,11 +83,12 @@
 				<tx:method name="find*" read-only="true"/> 
 				<tx:method name="view*" read-only="true"/> 
 				<tx:method name="show*" read-only="true"/>
-			<tx:method name="add*" propagation="REQUIRED" rollback-for="ServiceLevelException" />
-			<tx:method name="create*" propagation="REQUIRED" rollback-for="ServiceLevelException" />
-			<tx:method name="save*" propagation="REQUIRED" rollback-for="ServiceLevelException" />
-			<tx:method name="update*" propagation="REQUIRED" rollback-for="ServiceLevelException" />
-			<tx:method name="del*" propagation="REQUIRED" rollback-for="ServiceLevelException" />
+			<tx:method name="add*" propagation="REQUIRED"  />
+			<tx:method name="create*" propagation="REQUIRED"  />
+			<tx:method name="save*" propagation="REQUIRED"  />
+			<tx:method name="update*" propagation="REQUIRED"  />
+			<tx:method name="del*" propagation="REQUIRED"  />
+			<tx:method name="active*" propagation="REQUIRED"  />
 		</tx:attributes>
 	</tx:advice>
 

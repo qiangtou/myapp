@@ -26,14 +26,14 @@ public class DeptController {
 	public Result add(@RequestBody Dept dept){
 		deptService.saveOrUpdate(dept);
 		logger.info(dept);
-		return new Result(true,dept);
+		return new Result(dept);
 	}
 	@RequestMapping(value="/del.do",method=RequestMethod.POST)
 	@ResponseBody
 	public Result del(@RequestBody Dept dept){
 		deptService.delete(dept.getDeptId());
 		logger.info(dept);
-		return new Result(true,dept);
+		return new Result(dept);
 	}
 
 	public DeptService getDeptService() {

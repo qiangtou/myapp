@@ -13,6 +13,10 @@ public class Result {
 		this(success);
 		this.data = data;
 	}
+	public Result(Object data) {
+		this(true);
+		this.data = data;
+	}
 	
 	public Object getData() {
 		return data;
