@@ -31,7 +31,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
 	}
 
 	public void delete(Object t) {
-		// TODO Auto-generated method stub
+		getHibernateTemplate().delete(t);
 
 	}
 
