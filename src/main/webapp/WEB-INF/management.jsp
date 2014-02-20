@@ -21,7 +21,7 @@
 					<div style="float: left">
 						<input id='addDept' type="button" value="添加部门" >
 					</div>
-					登陆账户：admin&nbsp;
+					登陆账户：${user}&nbsp;
 				</div>
 			</div>
 
@@ -103,9 +103,7 @@
 					<tr><td>所属部门：</td>
 <td>
 <select id="deptId" style="width:142px">
-<c:forEach var="dept" items="${deptList}">
-<option style="text-align:center" value="${dept.deptId}">${dept.cname}</option>
-</c:forEach>
+{deptOption}
 </select></td></tr>
 					<tr></tr>
 				</tbody>

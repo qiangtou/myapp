@@ -32,7 +32,6 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
 
 	public void delete(Object t) {
 		getHibernateTemplate().delete(t);
-
 	}
 
 	public T find(Integer id) {

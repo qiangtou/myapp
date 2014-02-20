@@ -20,13 +20,24 @@ $(function() {
 			server:{},
 			deptServer:{}
 	}
+	$('.depts').each(function(){
+		var $this=$(this),
+		deptdata=$this.attr('deptdata').split(',');
+		cache.dept[this.id]={
+				deptId:this.id,
+				cname:deptdata[0],
+				deptNo:deptdata[1],
+				des:deptdata[2]
+		};
+	});
 	//服务器点击事件
 	var $menuList = $('#menuList').on('click','a',function(){
 			var serverId=this.id.replace('server',''),
 			server=cache.server[serverId];
-			$content.html(replace(showServerTEMP,server));
+			$content.html(tmpl(showServerTEMP,server));
 			fetchServerStatus();
-			/*$content.off('click','#updateServerBT')
+			//TODO 服务器点击事件
+			 $content.off('click','#updateServerBT')
 			.off('click','#activeServerBT')
 			.off('click','#delServerBT')
 			.on('click','#updateServerBT',function(){
@@ -37,7 +48,7 @@ $(function() {
 			})
 			.on('click','#delServerBT',function(){
 				console.log(this.id);
-			});*/
+			});
 
 	})	
 	// 左侧目录委托事件:点击部门展开与关闭
@@ -50,11 +61,10 @@ $(function() {
 						deptObj.cname = deptdata[0];
 						deptObj.deptNo = deptdata[1];
 						deptObj.dsc = deptdata[2];
-						cache.dept[deptId]=$.extend({},deptObj);
 						deptObj.title = deptObj.cname;
 						deptObj.action = '修改';
 						
-						$content.html(replace(deptTEMP, deptObj))
+						$content.html(tmpl(deptTEMP, deptObj))
 						.off('click','.action')
 						.on('click','.action',function(){
 							// 做修改部门操作
@@ -76,6 +86,7 @@ $(function() {
 									sync.del('/dept/del.do',{deptId:deptId},function(){
 										delete cache.dept[deptId];
 										$('#'+deptId).remove();
+										$content.html('');
 									});
 								}
 							}else{
@@ -86,9 +97,14 @@ $(function() {
 							$.post('/server/list.do', {
 								deptId : deptId
 							}, function(servers) {
-								if (servers && servers.length > 0) {
+								if ($.isArray(servers)&&servers.length>0) {
 									cache.deptServer[deptId]=servers;
-									menu.html(generateServers(servers)).show();
+									for(var i=servers.length;i--;){
+										cache.server[servers[i].id]=servers[i];
+									}
+									
+									
+									menu.html(tmpl(serverListTEMP,servers)).show();
 								}
 							});
 							img.src = '/images/subheader_fold.png';
@@ -100,9 +116,10 @@ $(function() {
 	
 	// 添加服务器事件
 	$('#addServer').click(function() {
-		$content.html(replace(addServerTEMP, {
+		$content.html(tmpl(addServerTEMP, {
 			title : '添加服务器',
-			action : '添加'
+			action : '添加',
+			deptOption:tmpl('<option value="{deptId}">{cname}</option>',_toArray(cache.dept))
 		}))
 		//确定添加
 		.off('click', '.action')
@@ -118,7 +135,7 @@ $(function() {
 	});
 	// 添加部门事件
 	$('#addDept').click(function() {
-		$content.html(replace(deptTEMP, {
+		$content.html(tmpl(deptTEMP, {
 			title : '添加部门',
 			action : '添加'
 		}))
@@ -142,7 +159,7 @@ $(function() {
 		sync.getJson('/server/status.do',{serverId:serverId},function(result){
 			var status=result.data;
 			if(status){
-				$content.find('#showResult').html(replace(serverStatusTEMP,status))
+				$content.find('#showResult').html(tmpl(serverStatusTEMP,status))
 			}else{
 				//TODO 未激活的情况
 				console.log('未激活的情况');
@@ -191,37 +208,38 @@ $(function() {
 			}
 		});
 		},
-		del:function(){
-			var args=Array.prototype.slice.call(arguments);
-			args.unshift('删除');
-			sync.base.apply(null,args);		
-		},
-		save : function(url, data, callback) {
-			var args=Array.prototype.slice.call(arguments);
-			args.unshift('添加');
-			sync.base.apply(null,args);
-		},
-		update: function(url, data, callback) {
-			var args=Array.prototype.slice.call(arguments);
-			args.unshift('修改');
-			sync.base.apply(null,args);			
+		getFun:function(actionStr){
+			var self=this;
+			return function(){
+				var args=Array.prototype.slice.call(arguments);
+				args.unshift(actionStr);
+				self.base.apply(null,args);		
+			}
 		}
 	}
+	$.extend(sync,{
+		del:sync.getFun('删除'),
+		save:sync.getFun('添加'),
+		update:sync.getFun('修改')
+	});
+	console.log(sync);
 	//添加,修改服务器成功后的回调
 	var renderServerList = function(obj) {
 		if (!obj) return;
 		console.log(obj);
 		// TODO 显示服务器
-		// $menuList.append(replace(menuTEMP,obj));
+		var server=obj.data;
+		$('#menu'+server.deptId).append(tmpl(serverListTEMP,server));
 	}
 	//添加,修改部门成功后的回调
 	var renderDeptList = function(obj, action) {
 		if (!obj)return;
 		// deptData="${dept.cname },${dept.deptNo },${dept.dsc }"
 		obj.deptData = '' + [ obj.cname, obj.deptNo, obj.dsc ];
+		cache.dept[obj.deptId]=obj;
 		( {
 			add : function() {
-				$menuList.append(replace(deptListTEMP, obj));
+				$menuList.append(tmpl(deptListTEMP, obj));
 			},
 			update : function() {
 				console.log('进入修改后的回调');
@@ -236,20 +254,27 @@ $(function() {
 	var isFolded = function(img) {
 		return img.src.indexOf('subheader_expand') > -1;
 	}
-	//模板替换工具
-	var replace = function(template, data) {
-		return template.replace(/{\w+}/g, function(key) {
-			key = key.slice(1, -1);
-			return data[key] ? data[key] : '';
-		});
+	//对象转数组工具
+	var _toArray=function(obj){
+		var arr=[];
+		for(o in obj){
+			arr.push(obj[o]);
+		}
+		return arr;
 	}
-	//展开时要生成的服务器列表html
-	var generateServers = function(servers) {
-		var server, html, arr = [];
-		for ( var i = 0, len = servers.length; i < len; i++) {
-			server = servers[i];
-			cache.server[server.id]=server;
-			html=replace(serverListTEMP,server);
+	//模板替换工具
+	var tmpl = function(template, data) {
+		var d,arr=[],html = '';
+		if (!$.isArray(data)) {
+			data=data||{};
+			data = [ data ];
+		}
+		for ( var i = 0, len = data.length; i < len; i++) {
+			d = data[i];
+			html = template.replace(/{\w+}/g, function(key) {
+				key = key.slice(1, -1);
+				return d[key] ? d[key] : '';
+			});
 			arr.push(html);
 		}
 		return arr.join('');

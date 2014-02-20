@@ -5,14 +5,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.mycompany.app.Vo.Result;
 import com.mycompany.app.model.User;
-
 
 @Controller
 public class LoginController {
@@ -37,8 +32,7 @@ public class LoginController {
 	}
 
 	private boolean valideUser(User user, HttpSession session) {
-		String userName = "admin";
-		if (null != user && userName.equals(user.getLoginName())) {
+		if (null != user ) {
 			session.setAttribute("user", user.getLoginName());
 			return true;
 		}
