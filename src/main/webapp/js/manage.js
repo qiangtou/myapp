@@ -32,7 +32,7 @@ $(function() {
 	});
 	//服务器点击事件
 	var $menuList = $('#menuList').on('click','a',function(){
-			var serverId=this.id.replace('server',''),
+			var self=this,serverId=this.id.replace('server',''),
 			server=cache.server[serverId];
 			$content.html(tmpl(showServerTEMP,server));
 			fetchServerStatus();
@@ -45,9 +45,18 @@ $(function() {
 			})
 			.on('click','#activeServerBT',function(){
 				console.log(this.id);
+				if(confirm('确定激活'+server.ipAddr+'?'))
+				sync.do('激活')('/server/active.do',{id:serverId});
 			})
 			.on('click','#delServerBT',function(){
 				console.log(this.id);
+				if(confirm('确定删除'+server.ipAddr+'?'))
+				sync.del('/server/del.do',{id:serverId},function(){
+					delete cache.server[serverId];
+					cache.deptServer[server.deptId]=_toArray(cache.server);
+					$(self).parent().remove();
+					$content.html('');
+				});
 			});
 
 	})	
@@ -81,7 +90,8 @@ $(function() {
 						.off('click','.del')
 						.on('click','.del',function(){
 							// 做删除部门操作
-							if(!cache.deptServer[deptId]){
+							var servers=cache.deptServer[deptId];
+							if(!servers||servers.length==0){
 								if(confirm("确定删除?")){
 									sync.del('/dept/del.do',{deptId:deptId},function(){
 										delete cache.dept[deptId];
@@ -208,7 +218,7 @@ $(function() {
 			}
 		});
 		},
-		getFun:function(actionStr){
+		do:function(actionStr){
 			var self=this;
 			return function(){
 				var args=Array.prototype.slice.call(arguments);
@@ -218,18 +228,20 @@ $(function() {
 		}
 	}
 	$.extend(sync,{
-		del:sync.getFun('删除'),
-		save:sync.getFun('添加'),
-		update:sync.getFun('修改')
+		del:sync.do('删除'),
+		save:sync.do('添加'),
+		update:sync.do('修改')
 	});
 	console.log(sync);
 	//添加,修改服务器成功后的回调
 	var renderServerList = function(obj) {
-		if (!obj) return;
-		console.log(obj);
-		// TODO 显示服务器
 		var server=obj.data;
-		$('#menu'+server.deptId).append(tmpl(serverListTEMP,server));
+		if (!server) return;
+		cache.server[server.id]=server;
+		var img=$('#img'+server.deptId);
+		if(!isFolded(img[0])){
+			$('#menu'+server.deptId).append(tmpl(serverListTEMP,server)).show();
+		}
 	}
 	//添加,修改部门成功后的回调
 	var renderDeptList = function(obj, action) {

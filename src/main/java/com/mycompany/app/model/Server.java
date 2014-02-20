@@ -9,6 +9,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="mst_transcodeserver")
 public class Server {
+	public final static byte VALID=1; 
+	public final static byte INVALID=0; 
 	@Id	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ID")
