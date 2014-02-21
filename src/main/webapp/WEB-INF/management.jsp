@@ -87,7 +87,6 @@
 			</div>
 			<div id="operate" style="float: right; padding: 10px 20px">
 				<input type="button" class="action" value="{action}">
-				<input type="button" class="del" value="删除">
 			</div>
 		</div>
 		<div id="showResult" style="padding: 10px 20px">
@@ -102,7 +101,7 @@
 					<tr></tr>
 					<tr><td>所属部门：</td>
 <td>
-<select id="deptId" style="width:142px">
+<select id="deptId" style="width:142px" >
 {deptOption}
 </select></td></tr>
 					<tr></tr>

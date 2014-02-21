@@ -15,4 +15,10 @@ public class DeptDaoImpl extends BaseDaoImpl<Dept> implements DeptDao{
 	public List<Dept> getUnDeletedList(){
 		return getHibernateTemplate().find("from Dept d where d.isDelete=?", Dept.UN_DELETE);
 	}
+	public boolean hasServer(Integer deptId) {
+		List list= getHibernateTemplate().find("select count(*) from Server s where  s.deptId=?", deptId);
+		Long count=(Long)list.get(0);
+		return count>0;
+	}
+	
 }

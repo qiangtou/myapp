@@ -13,7 +13,7 @@ import com.mycompany.app.dao.BaseDao;
 
 @Repository
 public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	protected Logger logger = Logger.getLogger(this.getClass());
 	private Class clazz;
 
 	@Autowired

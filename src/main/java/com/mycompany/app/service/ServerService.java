@@ -10,4 +10,12 @@ public interface ServerService {
 	public void saveOrUpdate(Server server);
 
 	public void active(Server server);
+
+	public void del(Server server);
+/**
+ * 修改ip和部门
+ * @param server
+ * @return TODO
+ */
+	public Server updateIpAndDept(Server server);
 }

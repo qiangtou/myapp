@@ -31,11 +31,16 @@ public class DeptServiceImpl implements DeptService {
 		deptDao.saveOrUpdate(dept);
 	}
 
-	public void delete(Integer deptId) {
-		//修改删除状态
-		Dept dept=deptDao.find(deptId);
-		dept.setIsDelete(Dept.DELETE);
-		deptDao.update(dept);
+	public boolean delete(Integer deptId) {
+		boolean hasServer=deptDao.hasServer(deptId);
+		if(!hasServer){
+			//修改删除状态
+			Dept dept=deptDao.find(deptId);
+			dept.setIsDelete(Dept.DELETE);
+			deptDao.update(dept);
+		}
+		return !hasServer;
+		
 	}
 
 }

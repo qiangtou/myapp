@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mycompany.app.model.Dept;
 import com.mycompany.app.service.DeptService;
 
 
@@ -18,9 +19,9 @@ public class ManagController {
 	private DeptService deptService;
 	
 	@RequestMapping(value="/index.do")
-	public ModelAndView hello1(){
+	public ModelAndView index(){
 		ModelAndView mv=new ModelAndView("management");
-		List deptList= deptService.getDeptList();
+		List<Dept> deptList= deptService.getDeptList();
 		mv.addObject("deptList", deptList);
 		return mv;
 	}

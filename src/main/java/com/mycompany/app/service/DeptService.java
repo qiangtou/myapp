@@ -9,5 +9,5 @@ public interface DeptService {
 
 	public void saveOrUpdate(Dept dept);
 
-	public void delete(Integer deptId);
+	public boolean delete(Integer deptId);
 }

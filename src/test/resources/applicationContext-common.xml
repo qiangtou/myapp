@@ -10,16 +10,11 @@
 	<context:component-scan base-package="com.mycompany.app" >
 		<context:include-filter type="regex" expression=".dao.impl.*"/>		
 		<context:include-filter type="regex" expression=".service.impl.*"/>
-		<context:include-filter type="regex" expression=".controller..*"/>
+		<context:include-filter type="regex" expression=".web.*"/>
 	</context:component-scan>
 	
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:parameter.properties</value>
-		</property>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:parameter.properties"/>
 	</bean>
-	
-
 
 </beans>

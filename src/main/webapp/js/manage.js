@@ -42,16 +42,17 @@ $(function() {
 			.off('click','#delServerBT')
 			.on('click','#updateServerBT',function(){
 				console.log(this.id);
+				saveOrUpdateServer('修改服务器','修改','/server/update.do',server);
 			})
 			.on('click','#activeServerBT',function(){
 				console.log(this.id);
 				if(confirm('确定激活'+server.ipAddr+'?'))
-				sync.do('激活')('/server/active.do',{id:serverId});
+				sync.action('激活')('/server/active.do',{id:serverId});
 			})
 			.on('click','#delServerBT',function(){
 				console.log(this.id);
 				if(confirm('确定删除'+server.ipAddr+'?'))
-				sync.del('/server/del.do',{id:serverId},function(){
+				sync.action('删除')('/server/del.do',{id:serverId},function(){
 					delete cache.server[serverId];
 					cache.deptServer[server.deptId]=_toArray(cache.server);
 					$(self).parent().remove();
@@ -83,7 +84,7 @@ $(function() {
 									deptNo : $content.find('#deptNo').val(),
 									dsc : $content.find('#deptDsc').val()
 							};
-							sync.update('/dept/update.do',data,function(result){
+							sync.action('修改')('/dept/update.do',data,function(result){
 								renderDeptList(result.data,'update');
 							});							
 						})
@@ -93,7 +94,7 @@ $(function() {
 							var servers=cache.deptServer[deptId];
 							if(!servers||servers.length==0){
 								if(confirm("确定删除?")){
-									sync.del('/dept/del.do',{deptId:deptId},function(){
+									sync.action('删除')('/dept/del.do',{deptId:deptId},function(){
 										delete cache.dept[deptId];
 										$('#'+deptId).remove();
 										$content.html('');
@@ -112,8 +113,6 @@ $(function() {
 									for(var i=servers.length;i--;){
 										cache.server[servers[i].id]=servers[i];
 									}
-									
-									
 									menu.html(tmpl(serverListTEMP,servers)).show();
 								}
 							});
@@ -126,30 +125,36 @@ $(function() {
 	
 	// 添加服务器事件
 	$('#addServer').click(function() {
-		$content.html(tmpl(addServerTEMP, {
-			title : '添加服务器',
-			action : '添加',
-			deptOption:tmpl('<option value="{deptId}">{cname}</option>',_toArray(cache.dept))
-		}))
-		//确定添加
+		saveOrUpdateServer('添加服务器','添加','/server/add.do');
+	});
+	var saveOrUpdateServer=function(title,action,url,server){
+		if(server){
+			var dept=cache.dept[server.deptId];
+			dept.selected='selected';
+		}
+		var data=$.extend({
+			title : title,
+			action : action,
+			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(cache.dept))
+		},server);
+		$content.html(tmpl(addServerTEMP, data))
 		.off('click', '.action')
 		.on('click', '.action', function() {
 			var data = {
+				id:server?server.id:'',
 				ipAddr : $content.find('#ipAddr').val(),
 				deptId : $content.find('#deptId').val()
 			};
 			//持久化到后台
-			sync.save('/server/add.do',data,renderServerList);
+			sync.action(action)(url,data,renderServerList);
 		});
-		$content.find('.del').remove();
-	});
+	}
 	// 添加部门事件
 	$('#addDept').click(function() {
 		$content.html(tmpl(deptTEMP, {
 			title : '添加部门',
 			action : '添加'
 		}))
-		//确定添加
 		.off('click', '.action')
 		.on('click', '.action', function() {
 			var data = {
@@ -158,7 +163,7 @@ $(function() {
 				dsc : $content.find('#deptDsc').val()
 			};
 			//持久化到后台
-			sync.save('/dept/add.do',data,function(result){
+			sync.action('添加')('/dept/add.do',data,function(result){
 				renderDeptList(result.data,'add');
 			});
 		});
@@ -218,7 +223,7 @@ $(function() {
 			}
 		});
 		},
-		do:function(actionStr){
+		action:function(actionStr){
 			var self=this;
 			return function(){
 				var args=Array.prototype.slice.call(arguments);
@@ -227,18 +232,28 @@ $(function() {
 			}
 		}
 	}
-	$.extend(sync,{
-		del:sync.do('删除'),
-		save:sync.do('添加'),
-		update:sync.do('修改')
-	});
-	console.log(sync);
 	//添加,修改服务器成功后的回调
 	var renderServerList = function(obj) {
 		var server=obj.data;
 		if (!server) return;
-		cache.server[server.id]=server;
+		var serverId = server.id;
+		var oldServer=cache.server[serverId];
+		//维护缓存
+		if(oldServer){
+			$('#server'+serverId).parent().remove();
+			var oldDeptId=oldServer.deptId;
+			var servers=cache.deptServer[oldDeptId];
+				if($.isArray(servers) && servers.length>0){
+					for(var i=servers.length;i--;){
+						if(servers[i].id==serverId){
+							servers[i]=server;
+						}
+					}
+				}
+		}
+		cache.server[serverId]=server;
 		var img=$('#img'+server.deptId);
+		//如果不是折叠状态则显示
 		if(!isFolded(img[0])){
 			$('#menu'+server.deptId).append(tmpl(serverListTEMP,server)).show();
 		}

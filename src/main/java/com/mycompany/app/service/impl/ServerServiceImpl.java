@@ -36,4 +36,17 @@ public class ServerServiceImpl implements ServerService {
 		server.setIsValid(Server.VALID);
 		saveOrUpdate(server);
 	}
+
+	public void del(Server server) {
+		server =serverDao.find(server.getId());
+		serverDao.delete(server);
+	}
+
+	public Server updateIpAndDept(Server server) {
+		Server s =serverDao.find(server.getId());
+		s.setIpAddr(server.getIpAddr());
+		s.setDeptId(server.getDeptId());
+		serverDao.save(s);
+		return s;
+	}
 }

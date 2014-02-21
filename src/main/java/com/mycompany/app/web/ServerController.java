@@ -42,11 +42,20 @@ public class ServerController {
 		return new Result(server);
 	}
 	
+	@RequestMapping(value="/update.do",method=RequestMethod.POST)
+	@ResponseBody
+	public Result update(@RequestBody Server server){
+		logger.info("update server:"+server);
+		server=serverService.updateIpAndDept(server);
+		return new Result(server);
+	}
+	
 	@RequestMapping(value="/del.do",method=RequestMethod.POST)
 	@ResponseBody
 	public Result del(@RequestBody Server server){
 		logger.info("del server"+server);
 		//TODO del server
+		serverService.del(server);
 		return new Result(server);
 	}
 	
@@ -63,7 +72,6 @@ public class ServerController {
 	@ResponseBody
 	public Result active(@RequestBody Server server){
 		logger.info("active server status"+server);
-		//TODO active server status
 		serverService.active(server);
 		return new Result(true);
 	}
