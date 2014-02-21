@@ -53,7 +53,7 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="userDS" />
-		<property name="packagesToScan" value="com.mycompany.app.model" />
+		<property name="packagesToScan" value="cn.jiuling.distributedmanagement.model" />
 
 		<!--hibernateProperties -->
 		<property name="hibernateProperties">
@@ -94,7 +94,7 @@
 
 	<!-- 那些类的哪些方法参与事务 -->
 	<aop:config>
-		<aop:pointcut id="allManagerMethod" expression="execution(* com.mycompany.app.service.*.*(..))" />
+		<aop:pointcut id="allManagerMethod" expression="execution(* cn.jiuling.distributedmanagement.service.*.*(..))" />
 		<aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice" />
 	</aop:config>
 </beans>

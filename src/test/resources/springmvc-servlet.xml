@@ -15,16 +15,16 @@
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<!-- 默认的注解映射的支持 -->
 	<mvc:annotation-driven />
-	<context:component-scan base-package="com.mycompany.app.web" />
+	<context:component-scan base-package="cn.jiuling.distributedmanagement.web" />
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 	<!--<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*.do"  />
-			<bean class="com.mycompany.app.interceptor.LoginInterceptor"></bean>
+			<bean class="cn.jiuling.distributedmanagement.interceptor.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 --></beans>  

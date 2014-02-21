@@ -1,12 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mycompany.app</groupId>
-	<artifactId>my-webapp</artifactId>
+	<groupId>cn.jiuling.distributed</groupId>
+	<artifactId>distributed-management</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>my-webapp Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>distributed-management</name>
 	<properties>
 		<spring.version>3.2.4.RELEASE</spring.version>
 		<hibernate.version>3.5.0-Final</hibernate.version>
@@ -172,6 +171,6 @@
                 </excludes>
             </resource>
         </resources>
-		<finalName>my-webapp</finalName>
+		<finalName>management</finalName>
 	</build>
 </project>
