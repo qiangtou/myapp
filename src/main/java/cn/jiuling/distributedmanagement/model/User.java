@@ -1,61 +1,73 @@
 package cn.jiuling.distributedmanagement.model;
 
-import java.math.BigDecimal;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 @Entity
-@Table(name="users")
 public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="UserId")
 	private Integer userId;
-	private String loginName;
-	private String sign;
-	private String nickName;
-	private BigDecimal point;
-	private byte userType;
+	@Column(name="user")
+	private String userName;
+	@Column(name="md5pwd")
+	private String passWord;
+	@Column(name="user_real_name")
+	private String realName;
+	@Column(name="user_tel")
+	private String telephone;
+	@Column(name="user_email")
+	private String email;
+	@Column(name="permission_level")
+	private byte permissionLevel;
+	public String getEmail() {
+		return email;
+	}
+	public String getPassWord() {
+		return passWord;
+	}
+	public byte getPermissionLevel() {
+		return permissionLevel;
+	}
+	public String getRealName() {
+		return realName;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
 	public Integer getUserId() {
 		return userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
+	public void setPermissionLevel(byte permissionLevel) {
+		this.permissionLevel = permissionLevel;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public String getLoginName() {
-		return loginName;
-	}
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
-	public String getSign() {
-		return sign;
-	}
-	public void setSign(String sign) {
-		this.sign = sign;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	public BigDecimal getPoint() {
-		return point;
-	}
-	public void setPoint(BigDecimal point) {
-		this.point = point;
-	}
-	public byte getUserType() {
-		return userType;
-	}
-	public void setUserType(byte userType) {
-		this.userType = userType;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	@Override
 	public String toString() {
-		return "User [loginName=" + loginName + ", nickName=" + nickName + ", point=" + point + ", sign=" + sign + ", userId=" + userId + ", userType=" + userType + "]";
+		return "User [email=" + email + ", passWord=" + passWord + ", permissionLevel=" + permissionLevel + ", realName=" + realName + ", telephone="
+				+ telephone + ", userId=" + userId + ", userName=" + userName + "]";
 	}
 }

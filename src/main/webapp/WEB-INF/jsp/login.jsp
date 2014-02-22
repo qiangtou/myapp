@@ -1,9 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -16,9 +15,10 @@
 		<meta http-equiv="pragma" content="no-cache">
 		<meta http-equiv="cache-control" content="no-cache">
 		<meta http-equiv="expires" content="0">
-		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-		<meta http-equiv="description" content="This is my page">
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/lib/md5.js"></script>
+		<script type="text/javascript" src="/js/login.js"></script>
 	</head>
 
 	<body>
@@ -49,9 +49,8 @@
 										账号:
 									</td>
 									<td valign="middle" align="left">
-										<input type="text" class="inputgri" name="loginName"
+										<input type="text" class="inputgri" name="userName"
 											id="username">
-										<span style="color: red; font-style: italic; width: 16px">用户名不能为空</span>
 									</td>
 								</tr>
 								<tr>
@@ -60,7 +59,7 @@
 									</td>
 									<td valign="middle" align="left">
 										<input style="height: 16px; width: 147px" type="password"
-											class="inputgri" id="password">
+											name="passWord" class="inputgri" id="password">
 										<span style="color: red; font-style: italic;"> </span>
 									</td>
 								</tr>
@@ -69,7 +68,7 @@
 							</tbody>
 						</table>
 						<p>
-							<input type="submit" class="button" value="确认"/>
+							<input type="submit" class="button" value="确认" />
 						</p>
 					</form>
 				</div>

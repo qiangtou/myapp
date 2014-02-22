@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="/js/lib/json2.js"></script>
 		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/lib/xml2json.js"></script>
 		<script type="text/javascript" src="/js/manage.js"></script>
 		<title>分布式网管系统</title>
 	</head>
@@ -79,7 +80,7 @@
 				</tbody>
 			</table>
 		</div>
-				</script>
+		</script>
 		<script id='addServerTEMP' type="template">
 		<div style="width: 100%; height: 50px">
 			<div style="float: left">
@@ -90,23 +91,33 @@
 			</div>
 		</div>
 		<div id="showResult" style="padding: 10px 20px">
+<form id="serverForm">
 			<table>
 				<tbody>
 					<tr>
 						<td>服务器IP：</td>
 						<td>
-							<input type="text" id="ipAddr" maxlength="20" value="{ipAddr}">
+<input type="hidden" value="{id}" name="id"/>
+							<input type="text" name="ipAddr" id="ipAddr" maxlength="20" value="{ipAddr}">
+						</td>
+					</tr>
+					<tr></tr>
+					<tr>
+						<td>附加功能：</td>
+						<td>
+							<input type="checkbox" name="isEnhance" id="isEnhance" {isEnhance} value="1">增强
 						</td>
 					</tr>
 					<tr></tr>
 					<tr><td>所属部门：</td>
 <td>
-<select id="deptId" style="width:142px" >
+<select id="deptId" name="deptId" style="width:142px" >
 {deptOption}
 </select></td></tr>
 					<tr></tr>
 				</tbody>
 			</table>
+</form>
 		</div>
 <div id="showResult" style="padding:10px 20px">
 				</script>
@@ -129,21 +140,22 @@
 			 		 <p id="ipAddr" style="padding:10px 20px;color:red;text-align:left">{ipAddr}</p>
 			 	</div>
 			  <div id="operate" style="float:right;padding:10px 20px">
-
-<input type="button" id="updateServerBT" value="修改"/>
-<input type="button" id="activeServerBT" value="激活" />
-<input type="button" id="delServerBT" value="删除" />
 			</div>
 			  </div>
 <div id="showResult" style="padding:10px 20px">正在查询中，请稍候。。。</div>
 				</script>
+				<script id='serverOperaTEMP' type="template">
+<input type="button" id="updateServerBT" value="修改"/>
+<input type="button" id="{status}" value="{statusVal}" />
+<input type="button" id="delServerBT" value="删除" />
+		  		</script>
 				<script id='serverStatusTEMP' type="template">
-		<p>正在转码数：{status1}</p>
-		<p>等待转码数：{status2}</p>
-		<p>正在分析数：{status3}</p>
-		<p>等待分析数：0</p>
-		<p>内存占用：34%</p>
-		<p>CPU占用：1%</p>
+		<p>正在转码数：{analysising}</p>
+		<p>等待转码数：{waitinganAlysising}</p>
+		<p>正在分析数：{transcoding}</p>
+		<p>等待分析数：{waitingTranscoding}</p>
+		<p>内存占用：{com_mem}%</p>
+		<p>CPU占用：{com_cup}%</p>
 		  		</script>
 
 	</body>

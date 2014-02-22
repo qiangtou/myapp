@@ -10,8 +10,9 @@ $(function() {
 	addServerTEMP = getTemplate('addServerTEMP'), 
 	serverListTEMP = getTemplate('serverListTEMP'), 
 	showServerTEMP = getTemplate('showServerTEMP'), 
-	serverStatusTEMP = getTemplate('serverStatusTEMP'), 
-	deptTEMP = getTemplate('deptTEMP'), 
+	serverStatusTEMP = getTemplate('serverStatusTEMP'),
+	serverOperaTEMP = getTemplate('serverOperaTEMP'),
+	deptTEMP = getTemplate('deptTEMP'),	
 	deptListTEMP = getTemplate('deptListTEMP');
 
 	// 页面缓存,存放部门和服务器,及两者关系
@@ -20,6 +21,7 @@ $(function() {
 			server:{},
 			deptServer:{}
 	}
+	window.c=cache;
 	$('.depts').each(function(){
 		var $this=$(this),
 		deptdata=$this.attr('deptdata').split(',');
@@ -35,31 +37,7 @@ $(function() {
 			var self=this,serverId=this.id.replace('server',''),
 			server=cache.server[serverId];
 			$content.html(tmpl(showServerTEMP,server));
-			fetchServerStatus();
-			//TODO 服务器点击事件
-			 $content.off('click','#updateServerBT')
-			.off('click','#activeServerBT')
-			.off('click','#delServerBT')
-			.on('click','#updateServerBT',function(){
-				console.log(this.id);
-				saveOrUpdateServer('修改服务器','修改','/server/update.do',server);
-			})
-			.on('click','#activeServerBT',function(){
-				console.log(this.id);
-				if(confirm('确定激活'+server.ipAddr+'?'))
-				sync.action('激活')('/server/active.do',{id:serverId});
-			})
-			.on('click','#delServerBT',function(){
-				console.log(this.id);
-				if(confirm('确定删除'+server.ipAddr+'?'))
-				sync.action('删除')('/server/del.do',{id:serverId},function(){
-					delete cache.server[serverId];
-					cache.deptServer[server.deptId]=_toArray(cache.server);
-					$(self).parent().remove();
-					$content.html('');
-				});
-			});
-
+			fetchServerStatus(server);
 	})	
 	// 左侧目录委托事件:点击部门展开与关闭
 	.on('click','.depts',function() {
@@ -132,20 +110,25 @@ $(function() {
 			var dept=cache.dept[server.deptId];
 			dept.selected='selected';
 		}
-		var data=$.extend({
+		
+		var data=$.extend({},server,{
 			title : title,
 			action : action,
+			isEnhance:server && server.isEnhance?'checked':'',
 			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(cache.dept))
-		},server);
+		});
+		console.log(data);
 		$content.html(tmpl(addServerTEMP, data))
 		.off('click', '.action')
 		.on('click', '.action', function() {
 			var data = {
 				id:server?server.id:'',
 				ipAddr : $content.find('#ipAddr').val(),
+				isEnhance : $content.find('#isEnhance:checked').val()||0,
 				deptId : $content.find('#deptId').val()
 			};
 			//持久化到后台
+			console.log('update server ',data);
 			sync.action(action)(url,data,renderServerList);
 		});
 	}
@@ -170,32 +153,74 @@ $(function() {
 		$content.find('.del').remove();
 	});
 	
-	var fetchServerStatus=function(serverId){
-		sync.getJson('/server/status.do',{serverId:serverId},function(result){
-			var status=result.data;
-			if(status){
-				$content.find('#showResult').html(tmpl(serverStatusTEMP,status))
-			}else{
-				//TODO 未激活的情况
-				console.log('未激活的情况');
+	var fetchServerStatus=function(server){
+		sync.getXML('/server/status.do',{serverId:server.id,sid:Math.random()},function(result){
+			var statusOperate;
+			if(result.ret!=0){
+                alert("服务器状态查询出错");
+				return ;
 			}
+			if(result.isValid==1){
+				$content.find('#showResult').html(tmpl(serverStatusTEMP,result));
+				statusOperate={status:'disable',statusVal:'禁用'}
+			}else if(result.isValid==0){
+				console.log('未激活的情况');
+				$("#showResult").html("<h4>服务器未激活</h4>");
+				statusOperate={status:'enable',statusVal:'激活'}
+			}
+			
+			$content.find('#operate').html(tmpl(serverOperaTEMP,statusOperate))
+			.off('click','#updateServerBT')
+			.off('click','#delServerBT')
+			.on('click','#updateServerBT',function(){
+				console.log(this.id);
+				saveOrUpdateServer('修改服务器','修改','/server/update.do',server);
+			})
+			.off('click','#'+statusOperate.status)
+			.on('click','#'+statusOperate.status,function(){
+				console.log(this.id);
+				if(confirm('确定'+statusOperate.statusVal+server.ipAddr+'?'))
+				sync.action(statusOperate.statusVal)('/server/'+statusOperate.status+'.do',{id:server.id},function(){
+						$('#server'+server.id).click();
+				});
+			})
+			.on('click','#delServerBT',function(){
+				console.log(this.id);
+				if(confirm('确定删除'+server.ipAddr+'?'))
+				sync.action('删除')('/server/del.do',{id:serverId},function(){
+					delete cache.server[serverId];
+					cache.deptServer[server.deptId]=_toArray(cache.server);
+					$(self).parent().remove();
+					$content.html('');
+				});
+			});
+			
+			
 		});
 	}
 	//持久化工具
 	var sync = {
-			getJson:function(url,data,callback){
+			getXML:function(url,data,callback){
 			$.ajax( {
 			url : url,
 			type : 'post',
 			data : data,
-			dataType : "json",
-			error : function() {},
-			success:function(result){
-				if (result.success) {
+			dataType : "xml",
+			timeout: 5000,
+			error : function(jqXHR, textStatus) {
+				if(textStatus==="timeout") {
+			           alert('获取超时!!')
+			     } 
+				if(textStatus==="parsererror") {
+					alert('返回数据格式错误!')
+				} 
+			},
+			success:function(xml){
+				var result=JSON.parse(xml2json(xml)).result;
+				console.log(result);
+				if (result) {
 					if(typeof callback=='function')
 						callback(result);
-				}else if(result.msg){
-					alert(result.msg);
 				}
 			}
 			});
@@ -235,9 +260,11 @@ $(function() {
 	//添加,修改服务器成功后的回调
 	var renderServerList = function(obj) {
 		var server=obj.data;
+		console.log('服务器返回的server',server);
 		if (!server) return;
 		var serverId = server.id;
 		var oldServer=cache.server[serverId];
+		console.log('原来的server',oldServer);
 		//维护缓存
 		if(oldServer){
 			$('#server'+serverId).parent().remove();

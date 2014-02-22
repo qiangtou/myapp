@@ -15,6 +15,7 @@ import cn.jiuling.distributedmanagement.Vo.Result;
 import cn.jiuling.distributedmanagement.Vo.Status;
 import cn.jiuling.distributedmanagement.model.Server;
 import cn.jiuling.distributedmanagement.service.ServerService;
+import cn.jiuling.distributedmanagement.utils.HttpUtils;
 
 
 @Controller
@@ -46,7 +47,7 @@ public class ServerController {
 	@ResponseBody
 	public Result update(@RequestBody Server server){
 		logger.info("update server:"+server);
-		server=serverService.updateIpAndDept(server);
+		server=serverService.updateServer(server);
 		return new Result(server);
 	}
 	
@@ -59,20 +60,39 @@ public class ServerController {
 		return new Result(server);
 	}
 	
-	@RequestMapping(value="/status.do",method=RequestMethod.POST)
+	/*@RequestMapping(value="/status.do",method=RequestMethod.POST)
 	@ResponseBody
 	public Result status(Integer serverId){
 		logger.info("get server status");
 		//TODO 取服务器运行状态,这里写死了,待添加
 		Status data = new Status(1,2,3);
 		return new Result(data);
+	}*/
+	
+	@RequestMapping(value="/status.do",method=RequestMethod.POST)
+	@ResponseBody
+	public String status(Integer serverId,float sid){
+		//TODO 取服务器运行状态,这里写死了,要配置的
+		String status="<?xml version=\"1.0\" encoding=\"UTF-8\"?><result><ret>2</ret><str_desc>suc</str_desc><isValid>1</isValid><type></type><ID>1</ID><IP>192.168.1.61</IP><analysising>0</analysising><waitinganAlysising>0</waitinganAlysising><transcoding>0</transcoding><waitingTranscoding>0</waitingTranscoding><com_mem>38</com_mem><com_cup>6</com_cup></result>";
+		String url="http://192.168.1.60/querySlvNodeInfo.php?&type=2&id="+serverId+"&sid="+sid;
+		logger.info("get server status start \n url is:"+url);
+		status=HttpUtils.get(url);
+		logger.info("get server status end, response is:\n"+status);
+		return status;
 	}
 	
-	@RequestMapping(value="/active.do",method=RequestMethod.POST)
+	@RequestMapping(value="/enable.do",method=RequestMethod.POST)
 	@ResponseBody
-	public Result active(@RequestBody Server server){
-		logger.info("active server status"+server);
-		serverService.active(server);
+	public Result enable(@RequestBody Server server){
+		logger.info("enable server status"+server);
+		serverService.enable(server);
+		return new Result(true);
+	}
+	@RequestMapping(value="/disable.do",method=RequestMethod.POST)
+	@ResponseBody
+	public Result disable(@RequestBody Server server){
+		logger.info("disable server status"+server);
+		serverService.disable(server);
 		return new Result(true);
 	}
 	

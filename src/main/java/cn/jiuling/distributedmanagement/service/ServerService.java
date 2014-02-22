@@ -9,7 +9,7 @@ public interface ServerService {
 
 	public void saveOrUpdate(Server server);
 
-	public void active(Server server);
+	public void enable(Server server);
 
 	public void del(Server server);
 /**
@@ -17,5 +17,7 @@ public interface ServerService {
  * @param server
  * @return TODO
  */
-	public Server updateIpAndDept(Server server);
+	public Server updateServer(Server server);
+
+    public void disable(Server server);
 }

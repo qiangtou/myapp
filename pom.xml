@@ -18,11 +18,17 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- log4j -->
+		<!-- log -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+		</dependency>
+		<!-- hibernate依赖日志 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 		<!-- servlet API -->
 		<dependency>
@@ -54,11 +60,7 @@
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
@@ -101,26 +103,13 @@
 			<artifactId>javassist</artifactId>
 			<version>3.12.1.GA</version>
 		</dependency>
-
+		<!--json库-->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.10</version>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.10</version>
-		</dependency>
-
-
-		<!-- log -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-
+		<!-- jsp标签库 -->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
@@ -132,8 +121,53 @@
 			<version>1.1.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.5</version>
+		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<db.url>192.168.1.60\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>Ast4HS</db.pw>
+				<db.name>test</db.name>
+				<hbm2ddl.auto>update</hbm2ddl.auto>
+			</properties>
+			<activation>
+			<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>60test</id>
+			<properties>
+				<db.url>192.168.1.60\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>Ast4HS</db.pw>
+				<db.name>astvs1v20_db</db.name>
+				<hbm2ddl.auto>validate</hbm2ddl.auto>
+			</properties>
+			<activation>
+			</activation>
+		</profile>
+		<profile>
+			<id>local</id>
+			<properties>
+				<db.url>127.0.0.1\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>123456</db.pw>
+				<db.name>test</db.name>
+				<hbm2ddl.auto>update</hbm2ddl.auto>
+			</properties>
+			<activation>
+			</activation>
+		</profile>
+	</profiles>
 	<build>
+		<finalName>management</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -152,7 +186,7 @@
 					<contextPath>/</contextPath>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<!-- jetty 在修改静态文件时解除锁定 -->
-					<webDefaultXml>src/main/resources/webdefault.xml</webDefaultXml>  
+					<webDefaultXml>src/main/resources/webdefault.xml</webDefaultXml>
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
 							<port>8080</port>
@@ -163,14 +197,13 @@
 			</plugin>
 		</plugins>
 		<resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                <exclude>**/webdefault.xml</exclude>
-                </excludes>
-            </resource>
-        </resources>
-		<finalName>management</finalName>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/webdefault.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 </project>

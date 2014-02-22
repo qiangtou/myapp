@@ -1,7 +1,5 @@
 package cn.jiuling.distributedmanagement.service.impl;
 
-import java.math.BigDecimal;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,21 +26,9 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 
-	public BigDecimal deductPoint(Integer userId,BigDecimal point) {
-		User user=findUserById(userId);
-		BigDecimal oldPoint= user.getPoint();
-		if(oldPoint.compareTo(BigDecimal.ZERO)>-1 &&point.compareTo(BigDecimal.ZERO)>-1 && oldPoint.compareTo(point)>-1){
-			user.setPoint(oldPoint.subtract(point));
-			userDao.update(user);
-		}else{
-			logger.info("oldPoint:"+oldPoint);
-		}
-		return user.getPoint();
-	}
-
-	public void setPoint(Integer userId, BigDecimal point) {
-		User user=findUserById(userId);
-		user.setPoint(point);
-		userDao.update(user);
+	@Override
+	public boolean valideUser(User user) {
+		User u=userDao.findByUserName(user.getUserName());
+		return null!=u &&user.getPassWord().equals(u.getPassWord());
 	}
 }
