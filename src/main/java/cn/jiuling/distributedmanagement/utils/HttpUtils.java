@@ -7,8 +7,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 
 public class HttpUtils {
+
+	private final static HttpClient client=new DefaultHttpClient(new PoolingClientConnectionManager());
+	
 	/**
 	 * get抓取
 	 * 一个简单的抓取工具类,使用get请求
@@ -16,7 +20,6 @@ public class HttpUtils {
 	 * @return response 响应文本
 	 */
 	public static String get(String url) {
-		HttpClient client = new DefaultHttpClient();
 		String response = "";
 		HttpGet g = new HttpGet(url);
 		HttpResponse response1;

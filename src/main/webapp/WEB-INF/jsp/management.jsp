@@ -7,9 +7,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="/js/lib/json2.js"></script>
 		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/lib/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="/js/lib/xml2json.js"></script>
 		<script type="text/javascript" src="/js/manage.js"></script>
 		<title>分布式网管系统</title>
+		<style>
+.error {
+	color: red;
+	font-style: italic;
+}
+</style>
 	</head>
 	<body style="text-align: center">
 		<div style="border: 2px solid black; height: 100%; width: 900px">
@@ -54,31 +61,33 @@
 			</div>
 		</div>
 		<div id="showResult" style="padding: 10px 20px">
+<form>
 			<table>
 				<tbody>
 					<tr>
 						<td>部门名称：</td>
 						<td>
-							<input type="text" id="deptName" maxlength="16" value="{cname}">
+							<input type="text" id="deptName" name="deptName" value="{cname}">
 						</td>
 					</tr>
 					<tr></tr>
 					<tr>
 						<td>部门编号：</td>
 						<td>
-							<input type="text" id="deptNo" maxlength="6" value="{deptNo}">
+							<input type="text" id="deptNo" name="deptNo"  value="{deptNo}">
 						</td>
 					</tr>
 					<tr></tr>
 					<tr>
 						<td>部门描述：</td>
 						<td>
-							<input type="text" id="deptDsc" maxlength="16" value="{dsc}">
+							<input type="text" id="deptDsc" name="deptDsc"  value="{dsc}">
 						</td>
 					</tr>
 					<tr></tr>
 				</tbody>
 			</table>
+</form>
 		</div>
 		</script>
 		<script id='addServerTEMP' type="template">

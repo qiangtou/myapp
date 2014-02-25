@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.jiuling.distributedmanagement.model.User;
 import cn.jiuling.distributedmanagement.service.UserService;
@@ -28,25 +29,25 @@ public class LoginController {
 	public String login(@ModelAttribute("user") User user,HttpSession session){
 		String forward;
 		logger.info(user);
-		if(valideUser(user,session)){
+		if(valideUser(user)){
 			forward="redirect:/";
+			session.setAttribute("user", user.getUserName());
 		}else{
 			forward="login";
 		}
 		return forward;
 	}
-
-	private boolean valideUser(User user, HttpSession session) {
-		//TODO 验证用户,这里写死了
-		String userName="admin";
-		String password="admin";
-		logger.info("login user is "+user);
-		//if (null != user && userName.equals(user.getUserName()) && password.equals(user.getPassWord())) {
-		if(userService.valideUser(user)){
-			session.setAttribute("user", userName);
-			return true;
-		}
-		return false;
+	
+	private boolean valideUser(User user) {
+		logger.info("login user is "+user);		
+		return userService.valideUser(user);
+	}
+	
+	@RequestMapping(value="/login/valid.do")
+	@ResponseBody
+	public boolean valid(@ModelAttribute("user") User user){
+		
+		return valideUser(user);
 	}
 
 }

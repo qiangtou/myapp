@@ -2,10 +2,11 @@ package cn.jiuling.distributedmanagement.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.util.WebUtils;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
@@ -19,10 +20,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		if(uri.startsWith("/login")){
 			return true;
 		}
-		HttpSession session = request.getSession();
-		Object user = session.getAttribute("user");
+		Object user = WebUtils.getSessionAttribute(request, "user");
 		logger.info("enter login interceptor,user is " + user+",uri is "+uri);
-		if (null == user || "".equals(user)) {
+		if (StringUtils.isEmpty(user)) {
 			request.getRequestDispatcher(LOGIN_PATH).forward(request, response);
 			return false;
 		}

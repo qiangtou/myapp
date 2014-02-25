@@ -52,19 +52,24 @@ $(function() {
 						deptObj.title = deptObj.cname;
 						deptObj.action = '修改';
 						
-						$content.html(tmpl(deptTEMP, deptObj))
-						.off('click','.action')
+						$content.html(tmpl(deptTEMP, deptObj));
+						var $form=$content.find('form')
+						validDept($form);
+						
+						$content.off('click','.action')
 						.on('click','.action',function(){
 							// 做修改部门操作
+							if($form.valid()){
 							var data = {
 									deptId:deptId,
 									cname : $content.find('#deptName').val(),
 									deptNo : $content.find('#deptNo').val(),
 									dsc : $content.find('#deptDsc').val()
-							};
-							sync.action('修改')('/dept/update.do',data,function(result){
-								renderDeptList(result.data,'update');
-							});							
+								};
+								sync.action('修改')('/dept/update.do',data,function(result){
+									renderDeptList(result.data,'update');
+								});	
+							}
 						})
 						.off('click','.del')
 						.on('click','.del',function(){
@@ -82,6 +87,7 @@ $(function() {
 								alert("该部门无法删除，请先转移或删除该部门下的服务器");
 							}
 						});
+						
 						if (isFolded(img)) {
 							$.post('/server/list.do', {
 								deptId : deptId
@@ -118,18 +124,23 @@ $(function() {
 			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(cache.dept))
 		});
 		console.log(data);
-		$content.html(tmpl(addServerTEMP, data))
-		.off('click', '.action')
+		$content.html(tmpl(addServerTEMP, data));
+		var $form=$content.find('form');
+		validServer($form);
+		console.log($form);
+		$content.off('click', '.action')
 		.on('click', '.action', function() {
-			var data = {
-				id:server?server.id:'',
-				ipAddr : $content.find('#ipAddr').val(),
-				isEnhance : $content.find('#isEnhance:checked').val()||0,
-				deptId : $content.find('#deptId').val()
-			};
-			//持久化到后台
-			console.log('update server ',data);
-			sync.action(action)(url,data,renderServerList);
+			if ($form.valid()) {
+				var data = {
+					id : server ? server.id : '',
+					ipAddr : $content.find('#ipAddr').val(),
+					isEnhance : $content.find('#isEnhance:checked').val() || 0,
+					deptId : $content.find('#deptId').val()
+				};
+				//持久化到后台
+				console.log('update server ', data);
+				sync.action(action)(url, data, renderServerList);
+			}
 		});
 	}
 	// 添加部门事件
@@ -137,9 +148,12 @@ $(function() {
 		$content.html(tmpl(deptTEMP, {
 			title : '添加部门',
 			action : '添加'
-		}))
-		.off('click', '.action')
+		}));
+		var $form=$content.find('form')
+		validDept($form);
+		$content.off('click', '.action')
 		.on('click', '.action', function() {
+			if($form.valid()){
 			var data = {
 				cname : $content.find('#deptName').val(),
 				deptNo : $content.find('#deptNo').val(),
@@ -149,6 +163,7 @@ $(function() {
 			sync.action('添加')('/dept/add.do',data,function(result){
 				renderDeptList(result.data,'add');
 			});
+			}
 		});
 		$content.find('.del').remove();
 	});
@@ -308,6 +323,64 @@ $(function() {
 	var isFolded = function(img) {
 		return img.src.indexOf('subheader_expand') > -1;
 	}
+	
+	//验证相关
+	$.extend($.validator.messages,{
+		maxlength:$.format('长度不能超过{0}')
+	});
+	$.validator.addMethod("ip", function(value, element, param) {
+		return this.optional(element) || /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value);
+	}, "ip格式有误");
+
+	var validServer = function (form) {
+		form.validate({
+			debug:true,
+			onkeyup : false,
+			messages : {
+				ipAddr : {
+					required : 'ip地址不能为空'
+				}
+			},
+			rules : {
+				ipAddr : {
+					required : true,
+					ip : true
+				}
+			}
+		});
+	}
+	var validDept = function (form) {
+		form.validate({
+			onkeyup : false,
+			messages : {
+				deptName : {
+					required : '部门名不能为空'
+				},
+				deptNo : {
+					required : '部门编号不能为空'
+				},
+				deptDsc : {
+					required : '部门描述不能为空'
+				}
+			},
+			rules : {
+				deptName : {
+					required : true,
+					maxlength : 16
+				},
+				deptNo : {
+					required : true,
+					maxlength : 6
+				},
+				deptDsc : {
+					required : true,
+					maxlength : 16
+				}
+			}
+		});
+	}
+	
+	
 	//对象转数组工具
 	var _toArray=function(obj){
 		var arr=[];
