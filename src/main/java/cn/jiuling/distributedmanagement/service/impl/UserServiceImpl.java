@@ -1,7 +1,8 @@
 package cn.jiuling.distributedmanagement.service.impl;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.jiuling.distributedmanagement.dao.UserDao;
@@ -11,19 +12,11 @@ import cn.jiuling.distributedmanagement.service.UserService;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 	private final Logger logger=Logger.getLogger(this.getClass());
-	@Autowired
+	@Resource
 	private UserDao userDao;
 
 	public User findUserById(Integer userId) {
 		return userDao.find(userId);
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 	}
 
 	@Override

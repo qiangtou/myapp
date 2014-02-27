@@ -26,11 +26,4 @@ public class ManagController {
 		return mv;
 	}
 	
-	public DeptService getDeptService() {
-		return deptService;
-	}
-	public void setDeptService(DeptService deptService) {
-		this.deptService = deptService;
-	}
-
 }

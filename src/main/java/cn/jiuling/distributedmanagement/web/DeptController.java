@@ -35,12 +35,4 @@ public class DeptController {
 		logger.info(dept);
 		return new Result(dept);
 	}
-
-	public DeptService getDeptService() {
-		return deptService;
-	}
-
-	public void setDeptService(DeptService deptService) {
-		this.deptService = deptService;
-	}
 }

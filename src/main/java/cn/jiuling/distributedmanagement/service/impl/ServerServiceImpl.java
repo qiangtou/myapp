@@ -19,14 +19,6 @@ public class ServerServiceImpl implements ServerService {
 		return serverDao.getServersByDeptId(deptId);
 	}
 
-	public ServerDao getServerDao() {
-		return serverDao;
-	}
-
-	public void setServerDao(ServerDao serverDao) {
-		this.serverDao = serverDao;
-	}
-
 	public void saveOrUpdate(Server server) {
 		serverDao.saveOrUpdate(server);
 	}

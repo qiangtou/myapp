@@ -158,7 +158,7 @@
 			<properties>
 				<db.url>127.0.0.1\:3306</db.url>
 				<db.user>root</db.user>
-				<db.pw>123456</db.pw>
+				<db.pw>root</db.pw>
 				<db.name>test</db.name>
 				<hbm2ddl.auto>update</hbm2ddl.auto>
 			</properties>

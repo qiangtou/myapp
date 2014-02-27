@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import cn.jiuling.distributedmanagement.dao.UserDao;
 import cn.jiuling.distributedmanagement.model.User;
 
-@Repository
+@Repository("userDao")
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
 
 	public User findByUserName(String userName) {

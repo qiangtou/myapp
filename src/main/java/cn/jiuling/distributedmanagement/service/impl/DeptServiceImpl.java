@@ -19,14 +19,6 @@ public class DeptServiceImpl implements DeptService {
 		return deptDao.getUnDeletedList();
 	}
 
-	public DeptDao getDeptDao() {
-		return deptDao;
-	}
-
-	public void setDeptDao(DeptDao deptDao) {
-		this.deptDao = deptDao;
-	}
-
 	public void saveOrUpdate(Dept dept) {
 		deptDao.saveOrUpdate(dept);
 	}

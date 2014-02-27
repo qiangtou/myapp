@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.jiuling.distributedmanagement.Vo.Result;
-import cn.jiuling.distributedmanagement.Vo.Status;
 import cn.jiuling.distributedmanagement.model.Server;
 import cn.jiuling.distributedmanagement.service.ServerService;
 import cn.jiuling.distributedmanagement.utils.HttpUtils;
@@ -94,14 +93,5 @@ public class ServerController {
 		logger.info("disable server status"+server);
 		serverService.disable(server);
 		return new Result(true);
-	}
-	
-	
-	public ServerService getServerService() {
-		return serverService;
-	}
-
-	public void setServerService(ServerService serverService) {
-		this.serverService = serverService;
-	}
+	}	
 }

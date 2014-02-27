@@ -4,7 +4,7 @@ $(function() {
 
 	// 自定义一个非法字符方法
 	$.validator.addMethod('illegal', function(v, e) {
-		return (/^[0-9a-zA-Z_]{5,16}$/).test(v);
+		return !this.optional(e) || (/^[0-9a-zA-Z_]{5,16}$/).test(v);
 	}, $.format('{0}不能有非法字符'));
 
 	var vForm = $('form').validate( {
