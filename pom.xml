@@ -135,6 +135,7 @@
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>test</db.name>
+				<server.status.host>http://192.168.1.60</server.status.host>
 				<hbm2ddl.auto>update</hbm2ddl.auto>
 			</properties>
 			<activation>
@@ -142,29 +143,19 @@
 			</activation>
 		</profile>
 		<profile>
-			<id>60test</id>
+			<id>52test</id>
 			<properties>
-				<db.url>192.168.1.60\:3306</db.url>
+				<db.url>192.168.1.52\:3306</db.url>
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>astvs1v20_db</db.name>
+				<server.status.host>http://192.168.1.52</server.status.host>
 				<hbm2ddl.auto>validate</hbm2ddl.auto>
 			</properties>
 			<activation>
 			</activation>
 		</profile>
-		<profile>
-			<id>local</id>
-			<properties>
-				<db.url>127.0.0.1\:3306</db.url>
-				<db.user>root</db.user>
-				<db.pw>root</db.pw>
-				<db.name>test</db.name>
-				<hbm2ddl.auto>update</hbm2ddl.auto>
-			</properties>
-			<activation>
-			</activation>
-		</profile>
+
 	</profiles>
 	<build>
 		<finalName>management</finalName>

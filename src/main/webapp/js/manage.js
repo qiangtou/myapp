@@ -123,11 +123,9 @@ $(function() {
 			isEnhance:server && server.isEnhance?'checked':'',
 			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(cache.dept))
 		});
-		console.log(data);
 		$content.html(tmpl(addServerTEMP, data));
 		var $form=$content.find('form');
 		validServer($form);
-		console.log($form);
 		$content.off('click', '.action')
 		.on('click', '.action', function() {
 			if ($form.valid()) {
@@ -138,7 +136,6 @@ $(function() {
 					deptId : $content.find('#deptId').val()
 				};
 				//持久化到后台
-				console.log('update server ', data);
 				sync.action(action)(url, data, renderServerList);
 			}
 		});
@@ -179,7 +176,6 @@ $(function() {
 				$content.find('#showResult').html(tmpl(serverStatusTEMP,result));
 				statusOperate={status:'disable',statusVal:'禁用'}
 			}else if(result.isValid==0){
-				console.log('未激活的情况');
 				$("#showResult").html("<h4>服务器未激活</h4>");
 				statusOperate={status:'enable',statusVal:'激活'}
 			}
@@ -188,19 +184,16 @@ $(function() {
 			.off('click','#updateServerBT')
 			.off('click','#delServerBT')
 			.on('click','#updateServerBT',function(){
-				console.log(this.id);
 				saveOrUpdateServer('修改服务器','修改','/server/update.do',server);
 			})
 			.off('click','#'+statusOperate.status)
 			.on('click','#'+statusOperate.status,function(){
-				console.log(this.id);
 				if(confirm('确定'+statusOperate.statusVal+server.ipAddr+'?'))
 				sync.action(statusOperate.statusVal)('/server/'+statusOperate.status+'.do',{id:server.id},function(){
 						$('#server'+server.id).click();
 				});
 			})
 			.on('click','#delServerBT',function(){
-				console.log(this.id);
 				if(confirm('确定删除'+server.ipAddr+'?'))
 				sync.action('删除')('/server/del.do',{id:serverId},function(){
 					delete cache.server[serverId];
@@ -232,7 +225,6 @@ $(function() {
 			},
 			success:function(xml){
 				var result=JSON.parse(xml2json(xml)).result;
-				console.log(result);
 				if (result) {
 					if(typeof callback=='function')
 						callback(result);
@@ -275,11 +267,9 @@ $(function() {
 	//添加,修改服务器成功后的回调
 	var renderServerList = function(obj) {
 		var server=obj.data;
-		console.log('服务器返回的server',server);
 		if (!server) return;
 		var serverId = server.id;
 		var oldServer=cache.server[serverId];
-		console.log('原来的server',oldServer);
 		//维护缓存
 		if(oldServer){
 			$('#server'+serverId).parent().remove();
@@ -311,7 +301,6 @@ $(function() {
 				$menuList.append(tmpl(deptListTEMP, obj));
 			},
 			update : function() {
-				console.log('进入修改后的回调');
 				$('#' + obj.deptId).attr('deptdata', obj.deptData).find('span')
 						.html(obj.cname);
 				$content.find('#title').html(obj.cname);
@@ -334,7 +323,6 @@ $(function() {
 
 	var validServer = function (form) {
 		form.validate({
-			debug:true,
 			onkeyup : false,
 			messages : {
 				ipAddr : {
