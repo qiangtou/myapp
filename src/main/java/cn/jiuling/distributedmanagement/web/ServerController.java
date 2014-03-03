@@ -15,7 +15,7 @@ import cn.jiuling.distributedmanagement.Vo.Result;
 import cn.jiuling.distributedmanagement.model.Server;
 import cn.jiuling.distributedmanagement.service.ServerService;
 import cn.jiuling.distributedmanagement.utils.HttpUtils;
-import cn.jiuling.distributedmanagement.utils.PropertiesUtil;
+import cn.jiuling.distributedmanagement.utils.PropertiesUtils;
 
 @Controller
 @RequestMapping("/server")
@@ -73,7 +73,7 @@ public class ServerController {
 		// TODO 取服务器运行状态,这里写死了,要配置的
 		// String status =
 		// "<?xml version=\"1.0\" encoding=\"UTF-8\"?><result><ret>2</ret><str_desc>suc</str_desc><isValid>1</isValid><type></type><ID>1</ID><IP>192.168.1.61</IP><analysising>0</analysising><waitinganAlysising>0</waitinganAlysising><transcoding>0</transcoding><waitingTranscoding>0</waitingTranscoding><com_mem>38</com_mem><com_cup>6</com_cup></result>";
-		String url = PropertiesUtil.get("server.status.host") + "/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
+		String url = PropertiesUtils.get("server.status.host") + "/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
 		logger.info("get server status start \n url is:" + url);
 		String status = HttpUtils.get(url);
 		logger.info("get server status end, response is:\n" + status);
