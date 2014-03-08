@@ -18,13 +18,13 @@ import cn.jiuling.distributedmanagement.utils.HttpUtils;
 import cn.jiuling.distributedmanagement.utils.PropertiesUtils;
 
 @Controller
-@RequestMapping("/server")
+@RequestMapping(value = "/server", method = RequestMethod.POST)
 public class ServerController {
 	private Logger logger = Logger.getLogger(ServerController.class);
 	@Resource
 	private ServerService serverService;
 
-	@RequestMapping(value = "/list.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/list.do")
 	@ResponseBody
 	public List list(Integer deptId) {
 		List list = null;
@@ -34,7 +34,7 @@ public class ServerController {
 		return list;
 	}
 
-	@RequestMapping(value = "/add.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/add.do")
 	@ResponseBody
 	public Result add(@RequestBody Server server) {
 		logger.info("add server");
@@ -42,7 +42,7 @@ public class ServerController {
 		return new Result(server);
 	}
 
-	@RequestMapping(value = "/update.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/update.do")
 	@ResponseBody
 	public Result update(@RequestBody Server server) {
 		logger.info("update server:" + server);
@@ -50,7 +50,7 @@ public class ServerController {
 		return new Result(server);
 	}
 
-	@RequestMapping(value = "/del.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/del.do")
 	@ResponseBody
 	public Result del(@RequestBody Server server) {
 		logger.info("del server" + server);
@@ -67,7 +67,7 @@ public class ServerController {
 	 * new Status(1,2,3); return new Result(data); }
 	 */
 
-	@RequestMapping(value = "/status.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/status.do")
 	@ResponseBody
 	public String status(Integer serverId, float sid) {
 		// TODO 取服务器运行状态,这里写死了,要配置的
@@ -80,7 +80,7 @@ public class ServerController {
 		return status;
 	}
 
-	@RequestMapping(value = "/enable.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/enable.do")
 	@ResponseBody
 	public Result enable(@RequestBody Server server) {
 		logger.info("enable server status" + server);
@@ -88,7 +88,7 @@ public class ServerController {
 		return new Result(true);
 	}
 
-	@RequestMapping(value = "/disable.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/disable.do")
 	@ResponseBody
 	public Result disable(@RequestBody Server server) {
 		logger.info("disable server status" + server);

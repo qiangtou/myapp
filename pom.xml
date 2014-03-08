@@ -7,7 +7,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>distributed-management</name>
 	<properties>
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>3.2.5.RELEASE</spring.version>
 		<hibernate.version>3.5.0-Final</hibernate.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -33,8 +33,8 @@
 		<!-- servlet API -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1-b09</version>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- MySQL驱动 -->
@@ -135,6 +135,7 @@
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>test</db.name>
+				<log4j.rootLogger>info,myconsole,myfile</log4j.rootLogger>
 				<server.status.host>http://192.168.1.60</server.status.host>
 				<hbm2ddl.auto>update</hbm2ddl.auto>
 			</properties>
@@ -145,17 +146,27 @@
 		<profile>
 			<id>52test</id>
 			<properties>
-				<db.url>192.168.1.52\:3306</db.url>
+				<db.url>localhost\:3306</db.url>
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>astvs1v20_db</db.name>
+				<log4j.rootLogger>info,myfile</log4j.rootLogger>
 				<server.status.host>http://192.168.1.52</server.status.host>
-				<hbm2ddl.auto>validate</hbm2ddl.auto>
+				<hbm2ddl.auto>none</hbm2ddl.auto>
 			</properties>
-			<activation>
-			</activation>
 		</profile>
-
+		<profile>
+			<id>60</id>
+			<properties>
+				<db.url>localhost\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>Ast4HS</db.pw>
+				<db.name>astvs1v20_db</db.name>
+				<log4j.rootLogger>info,myfile</log4j.rootLogger>
+				<server.status.host>http://192.168.1.60</server.status.host>
+				<hbm2ddl.auto>none</hbm2ddl.auto>
+			</properties>
+		</profile>
 	</profiles>
 	<build>
 		<finalName>management</finalName>

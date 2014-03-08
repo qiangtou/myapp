@@ -4,20 +4,26 @@ public class Result {
 	private boolean success;
 	private Object data;
 	private String msg;
-	
+
 	public Result(boolean success) {
 		super();
 		this.success = success;
 	}
-	public Result(boolean success,Object data) {
+
+	public Result(boolean success, Object data) {
 		this(success);
 		this.data = data;
 	}
+
 	public Result(Object data) {
 		this(true);
 		this.data = data;
 	}
-	
+
+	public Result() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Object getData() {
 		return data;
 	}
@@ -33,9 +39,11 @@ public class Result {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
+
 	public String getMsg() {
 		return msg;
 	}
+
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}

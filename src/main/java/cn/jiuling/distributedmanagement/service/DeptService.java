@@ -10,4 +10,6 @@ public interface DeptService {
 	public void saveOrUpdate(Dept dept);
 
 	public boolean delete(Integer deptId);
+
+	public void update(Dept dept);
 }

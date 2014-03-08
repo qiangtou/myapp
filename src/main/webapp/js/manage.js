@@ -2,7 +2,7 @@ $(function() {
 	// 取html模板的辅助工具
 	var getTemplate = function(id) {
 		return $.trim($('#' + id).html().replace(/[\r\n]/g, '')
-				.replace(/>\s+</g, '><'));
+		.replace(/>\s+</g, '><'));
 	}
 	//中间的内容区
 	var $content = $('#content'), 
@@ -16,16 +16,23 @@ $(function() {
 	deptListTEMP = getTemplate('deptListTEMP');
 
 	// 页面缓存,存放部门和服务器,及两者关系
-	var cache={
-			dept:{}	,
-			server:{},
-			deptServer:{}
+	var Servers={},
+	Depts={};
+	var getServers=function(deptId){
+		var arr=[],s;
+		for(var sid in Servers){
+			s=Servers[sid]
+			if(s.deptId==deptId){
+				arr.push(s);
+			}
+		}
+		return arr;
 	}
-	window.c=cache;
+
 	$('.depts').each(function(){
 		var $this=$(this),
 		deptdata=$this.attr('deptdata').split(',');
-		cache.dept[this.id]={
+		Depts[this.id]={
 				deptId:this.id,
 				cname:deptdata[0],
 				deptNo:deptdata[1],
@@ -35,7 +42,7 @@ $(function() {
 	//服务器点击事件
 	var $menuList = $('#menuList').on('click','a',function(){
 			var self=this,serverId=this.id.replace('server',''),
-			server=cache.server[serverId];
+			server=Servers[serverId];
 			$content.html(tmpl(showServerTEMP,server));
 			fetchServerStatus(server);
 	})	
@@ -74,11 +81,12 @@ $(function() {
 						.off('click','.del')
 						.on('click','.del',function(){
 							// 做删除部门操作
-							var servers=cache.deptServer[deptId];
+							 var servers=getServers(deptId);
+							//var servers=cache.deptServer[deptId];
 							if(!servers||servers.length==0){
 								if(confirm("确定删除?")){
 									sync.action('删除')('/dept/del.do',{deptId:deptId},function(){
-										delete cache.dept[deptId];
+										delete Depts[deptId];
 										$('#'+deptId).remove();
 										$content.html('');
 									});
@@ -93,9 +101,10 @@ $(function() {
 								deptId : deptId
 							}, function(servers) {
 								if ($.isArray(servers)&&servers.length>0) {
-									cache.deptServer[deptId]=servers;
+									//TODO 维护关系用,要删
+									//cache.deptServer[deptId]=servers;
 									for(var i=servers.length;i--;){
-										cache.server[servers[i].id]=servers[i];
+										Servers[servers[i].id]=servers[i];
 									}
 									menu.html(tmpl(serverListTEMP,servers)).show();
 								}
@@ -113,7 +122,7 @@ $(function() {
 	});
 	var saveOrUpdateServer=function(title,action,url,server){
 		if(server){
-			var dept=cache.dept[server.deptId];
+			var dept=Depts[server.deptId];
 			dept.selected='selected';
 		}
 		
@@ -121,7 +130,7 @@ $(function() {
 			title : title,
 			action : action,
 			isEnhance:server && server.isEnhance?'checked':'',
-			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(cache.dept))
+			deptOption:tmpl('<option {selected} value="{deptId}">{cname}</option>',_toArray(Depts))
 		});
 		$content.html(tmpl(addServerTEMP, data));
 		var $form=$content.find('form');
@@ -184,7 +193,7 @@ $(function() {
 			.off('click','#updateServerBT')
 			.off('click','#delServerBT')
 			.on('click','#updateServerBT',function(){
-				saveOrUpdateServer('修改服务器','修改','/server/update.do',server);
+				saveOrUpdateServer('修改服务器','修改','/server/update.do',Servers[server.id]);
 			})
 			.off('click','#'+statusOperate.status)
 			.on('click','#'+statusOperate.status,function(){
@@ -196,8 +205,9 @@ $(function() {
 			.on('click','#delServerBT',function(){
 				if(confirm('确定删除'+server.ipAddr+'?'))
 				sync.action('删除')('/server/del.do',{id:serverId},function(){
-					delete cache.server[serverId];
-					cache.deptServer[server.deptId]=_toArray(cache.server);
+					delete Servers[serverId];
+					//TODO 维护关系用,要删
+					//cache.deptServer[server.deptId]=_toArray(Servers);
 					$(self).parent().remove();
 					$content.html('');
 				});
@@ -269,33 +279,24 @@ $(function() {
 		var server=obj.data;
 		if (!server) return;
 		var serverId = server.id;
-		var oldServer=cache.server[serverId];
-		//维护缓存
-		if(oldServer){
-			$('#server'+serverId).parent().remove();
-			var oldDeptId=oldServer.deptId;
-			var servers=cache.deptServer[oldDeptId];
-				if($.isArray(servers) && servers.length>0){
-					for(var i=servers.length;i--;){
-						if(servers[i].id==serverId){
-							servers[i]=server;
-						}
-					}
-				}
+		if(Servers[serverId]){
+			$('#server'+serverId).html(server.ipAddr);
+		}else{			
+			var deptId=server.deptId;
+			var img=$('#img'+deptId);
+			//如果不是折叠状态则显示
+			if(!isFolded(img[0])){
+				$('#menu'+deptId).append(tmpl(serverListTEMP,server)).show();
+			}
 		}
-		cache.server[serverId]=server;
-		var img=$('#img'+server.deptId);
-		//如果不是折叠状态则显示
-		if(!isFolded(img[0])){
-			$('#menu'+server.deptId).append(tmpl(serverListTEMP,server)).show();
-		}
+		Servers[serverId]=server;
 	}
 	//添加,修改部门成功后的回调
 	var renderDeptList = function(obj, action) {
-		if (!obj.data)return;
+		if (!obj)return;
 		// deptData="${dept.cname },${dept.deptNo },${dept.dsc }"
 		obj.deptData = '' + [ obj.cname, obj.deptNo, obj.dsc ];
-		cache.dept[obj.deptId]=obj;
+		Depts[obj.deptId]=obj;
 		( {
 			add : function() {
 				$menuList.append(tmpl(deptListTEMP, obj));
@@ -320,6 +321,9 @@ $(function() {
 	$.validator.addMethod("ip", function(value, element, param) {
 		return this.optional(element) || /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value);
 	}, "ip格式有误");
+	$.validator.addMethod("num", function(value, element, param) {
+		return this.optional(element) || /^\d+$/i.test(value);
+	}, "必须是数字");
 
 	var validServer = function (form) {
 		form.validate({
@@ -358,7 +362,8 @@ $(function() {
 				},
 				deptNo : {
 					required : true,
-					maxlength : 6
+					maxlength : 6,
+					num:true
 				},
 				deptDsc : {
 					required : true,
