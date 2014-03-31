@@ -234,6 +234,9 @@ $(function() {
 				} 
 			},
 			success:function(xml){
+			if(!xml){
+			    alert('无法查到状态数据!');
+			}
 				var result=JSON.parse(xml2json(xml)).result;
 				if (result) {
 					if(typeof callback=='function')

@@ -1,89 +1,196 @@
 package cn.jiuling.distributedmanagement.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity()
-public class User {
+/**
+ * User entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "tbl_user")
+public class User implements java.io.Serializable {
+
+	// Fields
+
+	private Long id;
+	private String name;
+	private String fullName;
+	private Long groupId;
+	private Boolean blocked;
+	private Long createId;
+	private Timestamp createTime;
+	private Integer taskPriority;
+	private Boolean updateTimeRegular;
+	private String md5pwd;
+	private Timestamp lastUpdatePasswordTime;
+	private Timestamp lastLoginTime;
+	private Integer totalLoginDuration;
+	private Integer loginCount;
+
+	// Constructors
+
+	/** default constructor */
+	public User() {
+	}
+
+	public User(Long id, String name, String md5pwd) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.md5pwd = md5pwd;
+	}
+
+	/** full constructor */
+	public User(String name, String fullName, Long groupId, Boolean blocked, Long createId, Timestamp createTime, Integer taskPriority,
+			Boolean updateTimeRegular, String md5pwd, Timestamp lastUpdatePasswordTime, Timestamp lastLoginTime, Integer totalLoginDuration, Integer loginCount) {
+		this.name = name;
+		this.fullName = fullName;
+		this.groupId = groupId;
+		this.blocked = blocked;
+		this.createId = createId;
+		this.createTime = createTime;
+		this.taskPriority = taskPriority;
+		this.updateTimeRegular = updateTimeRegular;
+		this.md5pwd = md5pwd;
+		this.lastUpdatePasswordTime = lastUpdatePasswordTime;
+		this.lastLoginTime = lastLoginTime;
+		this.totalLoginDuration = totalLoginDuration;
+		this.loginCount = loginCount;
+	}
+
+	// Property accessors
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "UserId")
-	private Integer userId;
-	@Column(name = "user")
-	private String userName;
-	@Column(name = "md5pwd")
-	private String passWord;
-	@Column(name = "user_real_name")
-	private String realName;
-	@Column(name = "user_tel")
-	private String telephone;
-	@Column(name = "user_email")
-	private String email;
-	@Column(name = "permission_level")
-	private byte permissionLevel;
-
-	public String getEmail() {
-		return email;
+	@Column(name = "ID", unique = true, nullable = false)
+	public Long getId() {
+		return this.id;
 	}
 
-	public String getPassWord() {
-		return passWord;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public byte getPermissionLevel() {
-		return permissionLevel;
+	@Column(name = "name", nullable = false, length = 256)
+	public String getName() {
+		return this.name;
 	}
 
-	public String getRealName() {
-		return realName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getTelephone() {
-		return telephone;
+	@Column(name = "full_name", nullable = false, length = 256)
+	public String getFullName() {
+		return this.fullName;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
-	public String getUserName() {
-		return userName;
+	@Column(name = "GroupID", nullable = false)
+	public Long getGroupId() {
+		return this.groupId;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
 	}
 
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
+	@Column(name = "blocked", nullable = false)
+	public Boolean getBlocked() {
+		return this.blocked;
 	}
 
-	public void setPermissionLevel(byte permissionLevel) {
-		this.permissionLevel = permissionLevel;
+	public void setBlocked(Boolean blocked) {
+		this.blocked = blocked;
 	}
 
-	public void setRealName(String realName) {
-		this.realName = realName;
+	@Column(name = "create_id", nullable = false)
+	public Long getCreateId() {
+		return this.createId;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setCreateId(Long createId) {
+		this.createId = createId;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	@Column(name = "create_time", nullable = false, length = 19)
+	public Timestamp getCreateTime() {
+		return this.createTime;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
-	@Override
-	public String toString() {
-		return "User [email=" + email + ", passWord=" + passWord + ", permissionLevel=" + permissionLevel + ", realName=" + realName + ", telephone="
-				+ telephone + ", userId=" + userId + ", userName=" + userName + "]";
+	@Column(name = "task_priority", nullable = false)
+	public Integer getTaskPriority() {
+		return this.taskPriority;
 	}
+
+	public void setTaskPriority(Integer taskPriority) {
+		this.taskPriority = taskPriority;
+	}
+
+	@Column(name = "update_time_regular", nullable = false)
+	public Boolean getUpdateTimeRegular() {
+		return this.updateTimeRegular;
+	}
+
+	public void setUpdateTimeRegular(Boolean updateTimeRegular) {
+		this.updateTimeRegular = updateTimeRegular;
+	}
+
+	@Column(name = "md5pwd", nullable = false, length = 256)
+	public String getMd5pwd() {
+		return this.md5pwd;
+	}
+
+	public void setMd5pwd(String md5pwd) {
+		this.md5pwd = md5pwd;
+	}
+
+	@Column(name = "last_update_password_time", nullable = false, length = 19)
+	public Timestamp getLastUpdatePasswordTime() {
+		return this.lastUpdatePasswordTime;
+	}
+
+	public void setLastUpdatePasswordTime(Timestamp lastUpdatePasswordTime) {
+		this.lastUpdatePasswordTime = lastUpdatePasswordTime;
+	}
+
+	@Column(name = "last_login_time", nullable = false, length = 19)
+	public Timestamp getLastLoginTime() {
+		return this.lastLoginTime;
+	}
+
+	public void setLastLoginTime(Timestamp lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	@Column(name = "total_login_duration", nullable = false)
+	public Integer getTotalLoginDuration() {
+		return this.totalLoginDuration;
+	}
+
+	public void setTotalLoginDuration(Integer totalLoginDuration) {
+		this.totalLoginDuration = totalLoginDuration;
+	}
+
+	@Column(name = "login_count", nullable = false)
+	public Integer getLoginCount() {
+		return this.loginCount;
+	}
+
+	public void setLoginCount(Integer loginCount) {
+		this.loginCount = loginCount;
+	}
+
 }

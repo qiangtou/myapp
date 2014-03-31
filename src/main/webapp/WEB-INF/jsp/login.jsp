@@ -53,7 +53,7 @@
 										账号:
 									</td>
 									<td valign="middle" align="left">
-										<input type="text" class="inputgri" name="userName"
+										<input type="text" class="inputgri" name="name"
 											id="userName">
 									</td>
 								</tr>
@@ -63,7 +63,7 @@
 									</td>
 									<td valign="middle" align="left">
 										<input style="height: 16px; width: 147px" type="password"
-											name="passWord" class="inputgri" id="passWord">
+											name="md5pwd" class="inputgri" id="passWord">
 									</td>
 								</tr>
 

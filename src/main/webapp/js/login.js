@@ -10,11 +10,11 @@ $(function() {
 	var vForm = $('form').validate( {
 		onkeyup : false,
 		messages : {
-			userName : {
+			name : {
 				required : '账号不能为空',
 				rangelength : $.format('账号长度须大于{0},小于{1}')
 			},
-			passWord : {
+			md5pwd : {
 				required : '密码不能为空',
 				rangelength : $.format('密码长度须大于{0},小于{1}'),
 				remote : '账号密码不匹配!!'
@@ -22,12 +22,12 @@ $(function() {
 
 		},
 		rules : {
-			userName : {
+			name : {
 				required : true,
 				rangelength : [ 5, 16 ],
 				illegal : [ '用户名' ]
 			},
-			passWord : {
+			md5pwd : {
 				required : true,
 				rangelength : [ 5, 16 ],
 				illegal : [ '密码' ],
@@ -35,10 +35,10 @@ $(function() {
 					url : '/login/valid.do',
 					type : 'post',
 					data : {
-						passWord : function() {
+				        md5pwd : function() {
 							return MD5_hexhash($passWord.val());
 						},
-						userName : function() {
+						name : function() {
 							return $userName.val()
 						}
 					}

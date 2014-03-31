@@ -3,9 +3,11 @@ package cn.jiuling.distributedmanagement.web;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,24 +61,18 @@ public class ServerController {
 		return new Result(server);
 	}
 
-	/*
-	 * @RequestMapping(value="/status.do",method=RequestMethod.POST)
-	 * 
-	 * @ResponseBody public Result status(Integer serverId){
-	 * logger.info("get server status"); //TODO 取服务器运行状态,这里写死了,待添加 Status data =
-	 * new Status(1,2,3); return new Result(data); }
-	 */
-
 	@RequestMapping(value = "/status.do")
 	@ResponseBody
-	public String status(Integer serverId, float sid) {
-		// TODO 取服务器运行状态,这里写死了,要配置的
-		// String status =
-		// "<?xml version=\"1.0\" encoding=\"UTF-8\"?><result><ret>2</ret><str_desc>suc</str_desc><isValid>1</isValid><type></type><ID>1</ID><IP>192.168.1.61</IP><analysising>0</analysising><waitinganAlysising>0</waitinganAlysising><transcoding>0</transcoding><waitingTranscoding>0</waitingTranscoding><com_mem>38</com_mem><com_cup>6</com_cup></result>";
-		String url = PropertiesUtils.get("server.status.host") + "/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
+	public String status(Integer serverId, float sid, HttpServletRequest request) {
+
+		// TODO 网址写死了,以后扩展api后再改过来
+		String host = PropertiesUtils.get("server.status.host");
+		if (StringUtils.isEmpty(host)) {
+			host = request.getScheme() + "://" + request.getServerName();
+		}
+		String url = host + "/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
 		logger.info("get server status start \n url is:" + url);
 		String status = HttpUtils.get(url);
-		logger.info("get server status end, response is:\n" + status);
 		return status;
 	}
 

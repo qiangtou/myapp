@@ -11,11 +11,11 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 
 public class HttpUtils {
 
-	private final static HttpClient client=new DefaultHttpClient(new PoolingClientConnectionManager());
-	
+	private final static HttpClient client = new DefaultHttpClient(new PoolingClientConnectionManager());
+
 	/**
-	 * get抓取
-	 * 一个简单的抓取工具类,使用get请求
+	 * get抓取 一个简单的抓取工具类,使用get请求
+	 * 
 	 * @param url
 	 * @return response 响应文本
 	 */
@@ -29,7 +29,9 @@ public class HttpUtils {
 			InputStream in = entity1.getContent();
 			byte[] b = new byte[2048];
 			int len = in.read(b);
-			response = new String(b, 0, len, "utf-8");
+			if (len > 0) {
+				response = new String(b, 0, len, "utf-8");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -37,9 +39,10 @@ public class HttpUtils {
 		}
 		return response;
 	}
+
 	public static void main(String[] args) {
-		String url="http://192.168.1.60/querySlvNodeInfo.php?id=1&sid=0.21323045389726758";
-		String res=HttpUtils.get(url);
+		String url = "http://192.168.1.60/querySlvNodeInfo.php?id=1&sid=0.21323045389726758";
+		String res = HttpUtils.get(url);
 		System.out.println(res);
 	}
 }

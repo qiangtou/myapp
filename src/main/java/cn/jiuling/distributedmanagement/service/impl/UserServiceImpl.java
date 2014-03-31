@@ -11,7 +11,7 @@ import cn.jiuling.distributedmanagement.service.UserService;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-	private final Logger logger=Logger.getLogger(this.getClass());
+	private final Logger logger = Logger.getLogger(this.getClass());
 	@Resource
 	private UserDao userDao;
 
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean valideUser(User user) {
-		User u=userDao.findByUserName(user.getUserName());
-		return null!=u &&user.getPassWord().equals(u.getPassWord());
+		User u = userDao.findByUserName(user.getName());
+		return null != u && user.getMd5pwd().equals(u.getMd5pwd());
 	}
 }
