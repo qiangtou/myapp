@@ -6,3 +6,5 @@ target
 .svn
 .myeclipse
 *.log
+*.swp
+**/logs

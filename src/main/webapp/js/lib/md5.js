@@ -21,6 +21,15 @@
 
 
 //    md5_T[i] = parseInt(Math.abs(Math.sin(i)) * 4294967296.0);
+
+(function(factory){
+	 if (typeof define === 'function' && define['amd']) {
+	        define(['exports'], factory);
+	    } else {
+	    	var window = this || (0, eval)('this');
+	        factory(window);
+	    }
+})(function(exports){
 var MD5_T = new Array(0x00000000, 0xd76aa478, 0xe8c7b756, 0x242070db,
 		      0xc1bdceee, 0xf57c0faf, 0x4787c62a, 0xa8304613,
 		      0xfd469501, 0x698098d8, 0x8b44f7af, 0xffff5bb1,
@@ -197,3 +206,8 @@ function MD5_hexhash(data) {
     }
     return out;
 }
+
+exports.MD5_hexhash=MD5_hexhash;
+exports.MD5_hash=MD5_hash;
+return exports;
+})

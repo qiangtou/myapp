@@ -13,11 +13,8 @@
 		<meta http-equiv="cache-control" content="no-cache">
 		<meta http-equiv="expires" content="0">
 		<link rel="stylesheet" type="text/css" href="/css/style.css">
-		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/lib/jquery.validate.min.js"></script>
-		<script type="text/javascript" src="/js/lib/md5.js"></script>
-		<script type="text/javascript" src="/js/login.js"></script>
-		<style>
+		<script type="text/javascript" data-main="/js/login" src="/js/lib/require.js"></script>
+<style>
 .error {
 	color: red;
 	font-style: italic;

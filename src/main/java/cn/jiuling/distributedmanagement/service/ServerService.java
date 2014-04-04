@@ -12,12 +12,14 @@ public interface ServerService {
 	public void enable(Server server);
 
 	public void del(Server server);
-/**
- * 修改ip和部门
- * @param server
- * @return TODO
- */
+
+	/**
+	 * 修改ip和部门
+	 * 
+	 * @param server
+	 * @return
+	 */
 	public Server updateServer(Server server);
 
-    public void disable(Server server);
+	public void disable(Server server);
 }
