@@ -156,6 +156,18 @@
 				<hbm2ddl.auto>none</hbm2ddl.auto>
 			</properties>
 		</profile>
+		<profile>
+			<id>local</id>
+			<properties>
+				<db.url>localhost\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>123456</db.pw>
+				<db.name>test</db.name>
+				<log4j.rootLogger>info,myconsole</log4j.rootLogger>
+				<server.status.host></server.status.host>
+				<hbm2ddl.auto>update</hbm2ddl.auto>
+			</properties>
+		</profile>
 	</profiles>
 	<build>
 		<finalName>management</finalName>
