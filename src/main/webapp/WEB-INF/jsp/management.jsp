@@ -22,41 +22,39 @@
 	<body style="text-align: center">
 		<div
 			style="margin: 0 auto; border: 2px solid black; height: 100%; width: 900px">
-			<div
+			<div ms-controller="manager"
 				style="border: 2px solid grey; height: 40px; width: 99.5%; text-align: right;">
 				<div style="marging: 5x 2px; padding: 10px 2px">
 					<div style="float: left">
-						<input id='addServer' type="button" value="添加服务器">
+						<input ms-click='addServer' type="button" value="添加服务器">
 					</div>
 					<div style="float: left">
-						<input id='addDept' type="button" value="添加部门">
+						<input ms-click='addDept' type="button" value="添加部门">
 					</div>
 					登陆账户：${user}&nbsp;
 				</div>
 			</div>
 
-			<div ms-controller="main">
+			<div ms-controller="menu">
 				<div
 					style="float: left; border: 2px solid grey; width: 20%; height: 400px; overflow-y: auto; text-align: left; vertical-align: middle"
 					id="menuList">
-					<div ms-repeat-dept='depts'>
-						<div ms-click='showServers(dept)' class="depts"
-							ms-attr-id="deptId" style="cursor: pointer">
-							<img ms-attr-id="img{{deptId }}"
-								ms-attr-src="/images/subheader_{{expanded?'fold':'expand'}}.png"
+					<div ms-repeat='depts'>
+						<div ms-click='showServers(el)' class="depts"
+							 style="cursor: pointer">
+							<img  ms-src="/images/subheader_{{el.expanded?'fold':'expand'}}.png"
 								align="middle">
-							<span ms-attr-id="span{{deptId}}">{{cname }}</span>
+							<span >{{el.cname}}</span>
 						</div>
-						<div ms-attr-id="menu{{deptId}}" ms-visible='expanded'>
-							<li ms-repeat-server='servers'>
-								<a ms-attr-id="server{{id}}" href="javascript:void(0)" ms-click="">{{ipAddr}}</a>
+						<div ms-visible='el.expanded'>
+							<li ms-repeat='el.servers'>
+								<a href="javascript:void(0)"
+									ms-click="updateServer(el)">{{el.ipAddr}}</a>
 							</li>
 						</div>
 					</div>
 				</div>
-
-
-				<div id='content'
+				<div id='content' ms-controller="content" ms-include="{{tmpl}}"
 					style="border: 2px solid grey; width: 79%; height: 400px;">
 				</div>
 			</div>
@@ -64,11 +62,12 @@
 		<script id='deptTEMP' type="template">
 		<div style="width: 100%; height: 50px">
 			<div style="float: left">
-				<p id="title" style="padding: 10px 20px; color: red; text-align: left">{title}</p>
+				<p id="title" style="padding: 10px 20px; color: red; text-align: left">{{title}}</p>
 			</div>
 			<div id="operate" style="float: right; padding: 10px 20px">
-				<input type="button" class="action" value="{action}">
-				<input type="button" class="del" value="删除">
+				<input type="button" ms-visible="action=='add'" ms-click="addDept" value="添加">
+				<input type="button" ms-visible="action=='update'" ms-click="updateDept" value="修改">
+				<input type="button" ms-visible="action!='add'" ms-click="delDept" value="删除">
 			</div>
 		</div>
 		<div id="showResult" style="padding: 10px 20px">
@@ -78,21 +77,21 @@
 					<tr>
 						<td>部门名称：</td>
 						<td>
-							<input type="text" id="deptName" name="deptName" value="{cname}">
+							<input type="text" id="deptName" name="deptName" ms-duplex='dept.cname'>
 						</td>
 					</tr>
 					<tr></tr>
 					<tr>
 						<td>部门编号：</td>
 						<td>
-							<input type="text" id="deptNo" name="deptNo"  value="{deptNo}">
+							<input type="text" id="deptNo" name="deptNo"  ms-duplex='dept.deptNo' >
 						</td>
 					</tr>
 					<tr></tr>
 					<tr>
 						<td>部门描述：</td>
 						<td>
-							<input type="text" id="deptDsc" name="deptDsc"  value="{dsc}">
+							<input type="text" id="deptDsc" name="deptDsc" ms-duplex='dept.dsc'>
 						</td>
 					</tr>
 					<tr></tr>
@@ -104,10 +103,12 @@
 		<script id='addServerTEMP' type="template">
 		<div style="width: 100%; height: 50px">
 			<div style="float: left">
-				<p id="ip_addr" style="padding: 10px 20px; color: red; text-align: left">{title}</p>
+				<p id="ip_addr" style="padding: 10px 20px; color: red; text-align: left">{{title}}</p>
 			</div>
 			<div id="operate" style="float: right; padding: 10px 20px">
-				<input type="button" class="action" value="{action}">
+				<input type="button" ms-click="addServer(server)" ms-visible='action=="add"' value="添加">
+				<input type="button" ms-click="updateServer(server)" ms-visible='action=="update"' value="修改">
+				<input type="button" ms-click="deleteServer(server)" ms-visible='action=="update"' value="删除">
 			</div>
 		</div>
 		<div id="showResult" style="padding: 10px 20px">
@@ -118,22 +119,23 @@
 						<td>服务器IP：</td>
 						<td>
 <input type="hidden" value="{id}" name="id"/>
-							<input type="text" name="ipAddr" id="ipAddr" maxlength="20" value="{ipAddr}">
+							<input type="text" name="ipAddr" id="ipAddr" maxlength="20" ms-duplex="server.ipAddr" >
 						</td>
 					</tr>
 					<tr></tr>
 					<tr>
 						<td>附加功能：</td>
 						<td>
-							<input type="checkbox" name="isEnhance" id="isEnhance" {isEnhance} value="1">增强
+							<input type="checkbox" name="isEnhance" id="isEnhance" ms-duplex="server.isEnhance" >增强
 						</td>
 					</tr>
 					<tr></tr>
 					<tr><td>所属部门：</td>
 <td>
-<select id="deptId" name="deptId" style="width:142px" >
-{deptOption}
-</select></td></tr>
+				<select ms-duplex='server.deptId' name="deptId" style="width:142px" >
+						<option ms-repeat="depts" ms-value="el.deptId">{{el.cname}}</option>
+				</select>
+</td></tr>
 					<tr></tr>
 				</tbody>
 			</table>
@@ -143,8 +145,8 @@
 				</script>
 		<script id='deptListTEMP' type="template">
 				<div class="depts" id="{deptId}" deptData="{deptData}" style="cursor: pointer" >
-					<img id="img{deptId}" src="/images/subheader_expand.png" align="middle">
-					<span id="span{deptId}">{cname}</span>
+					<img  src="/images/subheader_expand.png" align="middle">
+					<span >{cname}</span>
 				</div>
 				<div id="menu{deptId}" style="display: none">
 				</div>
@@ -164,6 +166,7 @@
 			  </div>
 <div id="showResult" style="padding:10px 20px">正在查询中，请稍候。。。</div>
 				</script>
+				<script type="template" id='empty'></script>
 		<script id='serverOperaTEMP' type="template">
 <input type="button" id="updateServerBT" value="修改"/>
 <input type="button" id="{status}" value="{statusVal}" />
