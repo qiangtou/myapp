@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 /**
  * User entity. @author MyEclipse Persistence Tools
  */
@@ -86,6 +88,7 @@ public class User implements java.io.Serializable {
 	}
 
 	@Column(name = "full_name", nullable = false, length = 256)
+	@Type(type = "cn.jiuling.distributedmanagement.utils.UTF8String")
 	public String getFullName() {
 		return this.fullName;
 	}

@@ -126,6 +126,11 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.2.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2.1</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
@@ -140,7 +145,7 @@
 				<hbm2ddl.auto>update</hbm2ddl.auto>
 			</properties>
 			<activation>
-			<activeByDefault>true</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
 
@@ -151,7 +156,19 @@
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>astvs1v20_db</db.name>
-				<log4j.rootLogger>info,myfile</log4j.rootLogger>
+				<log4j.rootLogger>info,myfile,myconsole</log4j.rootLogger>
+				<server.status.host></server.status.host>
+				<hbm2ddl.auto>none</hbm2ddl.auto>
+			</properties>
+		</profile>
+		<profile>
+			<id>52test</id>
+			<properties>
+				<db.url>192.168.1.52\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>Ast4HS</db.pw>
+				<db.name>astvs1v20_db</db.name>
+				<log4j.rootLogger>info,myconsole</log4j.rootLogger>
 				<server.status.host></server.status.host>
 				<hbm2ddl.auto>none</hbm2ddl.auto>
 			</properties>
