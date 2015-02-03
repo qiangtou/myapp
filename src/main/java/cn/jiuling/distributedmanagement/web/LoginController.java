@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.jiuling.distributedmanagement.dao.UserDao;
 import cn.jiuling.distributedmanagement.model.User;
 import cn.jiuling.distributedmanagement.service.UserService;
 
@@ -19,10 +20,21 @@ public class LoginController {
 	@Resource
 	private UserService userService;
 
+	@Resource
+	private UserDao userDao;
+
 	@RequestMapping(value = "index.do")
 	public String index() {
 		logger.info("进入登录页面");
 		return "login";
+	}
+
+	@RequestMapping(value = "logout.do")
+	public String logout(HttpSession session) {
+		String userName = (String) session.getAttribute("user");
+		session.invalidate();
+		logger.info("用户注销：" + userName);
+		return "redirect:/";
 	}
 
 	@RequestMapping(value = "login.do")
@@ -35,6 +47,7 @@ public class LoginController {
 		} else {
 			forward = "login";
 		}
+		session.setAttribute("onlinenum", userDao.onlineUser());
 		return forward;
 	}
 
@@ -56,5 +69,4 @@ public class LoginController {
 			return false;
 		}
 	}
-
 }

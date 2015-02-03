@@ -5,9 +5,9 @@ import java.util.List;
 import cn.jiuling.distributedmanagement.model.Server;
 
 public interface ServerService {
-	public List<Server> getServerList(Integer deptId);
+	public List<Server> getServerList(Long deptId);
 
-	public void saveOrUpdate(Server server);
+	public Server add(Server server);
 
 	public void enable(Server server);
 

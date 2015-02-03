@@ -1,59 +1,90 @@
 package cn.jiuling.distributedmanagement.model;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+/**
+ * Transcodeserver entity. @author MyEclipse Persistence Tools
+ */
 @Entity
-@Table(name="mst_transcodeserver")
-public class Server {
-	public final static byte VALID=1; 
-	public final static byte INVALID=0; 
-	@Id	
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="ID")
-	private Integer id;
-	@Column(name="IPAddr")
+@Table(name = "mst_transcodeserver")
+public class Server implements java.io.Serializable {
+
+	// Fields
+
+	public static final Short VALID = 1;
+	public static final Short INVALID = 0;
+	private Long id;
 	private String ipAddr;
-	private byte isValid;
-	private byte isEnhance;
-	@Column(name="dept_id")
-	private Integer deptId;
-	
-	public Integer getId() {
-		return id;
+	private Short isValid;
+	private Short isEnhance;
+	private Long deptId;
+
+	// Constructors
+
+	/** default constructor */
+	public Server() {
 	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getIpAddr() {
-		return ipAddr;
-	}
-	public void setIpAddr(String ipAddr) {
-		this.ipAddr = ipAddr;
-	}
-	public byte getIsValid() {
-		return isValid;
-	}
-	public void setIsValid(byte isValid) {
+
+	/** full constructor */
+	public Server(String ipaddr, Short isValid, Short isEnhance, Long deptId) {
+		this.ipAddr = ipaddr;
 		this.isValid = isValid;
-	}
-	public byte getIsEnhance() {
-		return isEnhance;
-	}
-	public void setIsEnhance(byte isEnhance) {
 		this.isEnhance = isEnhance;
-	}
-	public Integer getDeptId() {
-		return deptId;
-	}
-	public void setDeptId(Integer deptId) {
 		this.deptId = deptId;
 	}
-	@Override
-	public String toString() {
-		return "Server [Id=" + id + ", deptId=" + deptId + ", ipAddr=" + ipAddr + ", isEnhance=" + isEnhance + ", isValid=" + isValid + "]";
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "ID", unique = true, nullable = false)
+	public Long getId() {
+		return this.id;
 	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Column(name = "IPAddr", nullable = false)
+	public String getIpAddr() {
+		return this.ipAddr;
+	}
+
+	public void setIpAddr(String ipaddr) {
+		this.ipAddr = ipaddr;
+	}
+
+	@Column(name = "isValid", nullable = false)
+	public Short getIsValid() {
+		return this.isValid;
+	}
+
+	public void setIsValid(Short isValid) {
+		this.isValid = isValid;
+	}
+
+	@Column(name = "isEnhance", nullable = false)
+	public Short getIsEnhance() {
+		return this.isEnhance;
+	}
+
+	public void setIsEnhance(Short isEnhance) {
+		this.isEnhance = isEnhance;
+	}
+
+	@Column(name = "dept_id", nullable = false)
+	public Long getDeptId() {
+		return this.deptId;
+	}
+
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+
 }

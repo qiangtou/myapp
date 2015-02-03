@@ -8,10 +8,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.log4j.Logger;
 
 public class HttpUtils {
 
 	private final static HttpClient client = new DefaultHttpClient(new PoolingClientConnectionManager());
+	private final static Logger log = Logger.getLogger(HttpUtils.class);
 
 	/**
 	 * get抓取 一个简单的抓取工具类,使用get请求
@@ -33,7 +35,7 @@ public class HttpUtils {
 				response = new String(b, 0, len, "utf-8");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} finally {
 			g.abort();
 		}

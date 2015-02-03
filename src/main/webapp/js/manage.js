@@ -13,7 +13,8 @@ $(function() {
 	serverStatusTEMP = getTemplate('serverStatusTEMP'),
 	serverOperaTEMP = getTemplate('serverOperaTEMP'),
 	deptTEMP = getTemplate('deptTEMP'),	
-	deptListTEMP = getTemplate('deptListTEMP');
+	deptListTEMP = getTemplate('deptListTEMP'),
+	pageTEMP = getTemplate('pageTEMP');
 
 	// 页面缓存,存放部门和服务器,及两者关系
 	var Servers={},
@@ -49,7 +50,7 @@ $(function() {
 	// 左侧目录委托事件:点击部门展开与关闭
 	.on('click','.depts',function() {
 						var $this = $(this), deptId = this.id, deptObj = {}, img = $this
-								.children('img')[0], menu = $this.next(), deptdata = $
+								.children('.glyphicon')[0], menu = $this.next(), deptdata = $
 								.attr(this, 'deptdata').split(',');
 
 						deptObj.id = deptId;
@@ -109,10 +110,10 @@ $(function() {
 									menu.html(tmpl(serverListTEMP,servers)).show();
 								}
 							});
-							img.src = '/images/subheader_fold.png';
+							$(img).removeClass('glyphicon-plus').addClass('glyphicon-minus');
 						} else {
 							menu.hide();
-							img.src = '/images/subheader_expand.png';
+							$(img).removeClass('glyphicon-minus').addClass('glyphicon-plus');
 						}
 					});
 	
@@ -174,17 +175,21 @@ $(function() {
 		$content.find('.del').remove();
 	});
 	
+	var formatDisk=function(n){
+	    n=(+n)|0;
+	    var gb=n/1024;	   
+	   return gb.toFixed(2);
+	}
 	var fetchServerStatus=function(server){
 		sync.getXML('/server/status.do',{serverId:server.id,sid:Math.random()},function(result){
 			var statusOperate;
-			if(result.ret!=0){
-                alert("服务器状态查询出错");
-				return ;
-			}
-			if(result.isValid==1){
+			if(result && result.ret==0 && result.isValid==1){
+				result.used_disk = Math.round(((result.total_disk-result.free_disk)/result.total_disk*100)*100/100);
+				result.free_disk=formatDisk(result.free_disk);
+				result.total_disk=formatDisk(result.total_disk);
 				$content.find('#showResult').html(tmpl(serverStatusTEMP,result));
 				statusOperate={status:'disable',statusVal:'禁用'}
-			}else if(result.isValid==0){
+			}else {
 				$("#showResult").html("<h4>服务器未激活</h4>");
 				statusOperate={status:'enable',statusVal:'激活'}
 			}
@@ -314,7 +319,7 @@ $(function() {
 	}
 	//判断折叠状态
 	var isFolded = function(img) {
-		return img.src.indexOf('subheader_expand') > -1;
+		return $(img).is('.glyphicon-plus');
 	}
 	
 	//验证相关
@@ -327,6 +332,14 @@ $(function() {
 	$.validator.addMethod("num", function(value, element, param) {
 		return this.optional(element) || /^\d+$/i.test(value);
 	}, "必须是数字");
+	$.validator.addMethod("ipExist", function(value, element, param) {
+		console.log(Servers)
+		var isExist=false;
+		for(var i in Servers){
+			isExist=isExist||(Servers[i].ipAddr==value);
+		}
+		return !isExist;
+	}, "此ip已存在");
 
 	var validServer = function (form) {
 		form.validate({
@@ -339,7 +352,8 @@ $(function() {
 			rules : {
 				ipAddr : {
 					required : true,
-					ip : true
+					ip : true,
+					ipExist:true
 				}
 			}
 		});
@@ -375,8 +389,98 @@ $(function() {
 			}
 		});
 	}
-	
-	
+
+	//退出事件
+	$('#logout').click(function(){
+		location.href='/logout.do'
+	});
+	var $online_user=$('#online-user'),
+	$online_count=$('#online_count'),
+	$online_pager=$online_user.find('ul.pagination'),
+	pager={
+		page:1,
+		totalPage:1,
+		rows:15
+	};
+
+	$online_pager.on('click','li',function(){
+		var clickPage=$.trim($(this).text());
+		var curPage=pager.page;
+
+		if(clickPage.indexOf('next')!=-1){
+			var next=curPage+1;
+			if(next>pager.totalPage){
+				next=pager.totalPage;
+			}
+			pager.page=next;
+		}else if(clickPage.indexOf('prev')!=-1){
+			var prev=curPage-1;
+			if(prev<1){
+				prev=1;
+			}
+			pager.page=prev;
+		}else{
+			pager.page=clickPage|0;
+		}
+		console.log(pager)
+		loadOnlineUser();
+	});
+
+
+
+	var loadOnlineUser=function(){
+	    page=pager.page;
+		$.post('/user/loginedUserList.do',pager,function(result){
+			var d,user,arr=[];
+			if(result && $.isArray(result.rows)){
+				for(var i=0,len=result.rows.length;i<len;i++){
+					user=result.rows[i];
+					arr.push('<li>'+user.name+'</li>');
+				}
+				$online_user.find('ol.onlineuser').html(arr.join(""));
+				$online_count.html(len);
+				renderPager(result.total);
+			}
+		});
+	}
+	var renderPager=function(total){
+		var page=pager.page;
+		if(total==0){
+		    pager.page=1;
+			$online_pager.html('');
+			return;
+		}
+		var arr=[],
+		prev='<li><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">prev</span></a></li>',
+		next='<li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">next</span></a></li>';
+		var totalPage=((total-1)/pager.rows+1)|0;
+		if(page>totalPage)page=totalPage;
+
+		pager.totalPage=totalPage;
+		pager.page=page;
+
+		for(var i=1;i<=totalPage;i++){
+			if(page==i){
+			arr.push(tmpl(pageTEMP,{page:page,class:'active'}))
+			}else if(i>=page-3 && i<=page+3){
+			arr.push(tmpl(pageTEMP,{page:i}))
+			}
+		}
+		if(arr.length==7){
+		  arr.pop();
+		  arr.shift();
+		}
+		if(arr.length==6){
+			arr.pop();
+		}
+		arr.unshift(prev);
+		arr.push(next);
+		$online_pager.html(arr.join(''));
+
+	}
+	loadOnlineUser();
+	setInterval(loadOnlineUser,3000)
+
 	//对象转数组工具
 	var _toArray=function(obj){
 		var arr=[];

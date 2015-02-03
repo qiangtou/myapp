@@ -136,12 +136,12 @@
 		<profile>
 			<id>dev</id>
 			<properties>
-				<db.url>192.168.1.60\:3306</db.url>
+				<db.url>192.168.1.61\:3306</db.url>
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
-				<db.name>test</db.name>
+				<db.name>astvs1v20_db_master</db.name>
 				<log4j.rootLogger>info,myconsole,myfile</log4j.rootLogger>
-				<server.status.host>http://192.168.1.60</server.status.host>
+				<server.status.host>http://192.168.1.61</server.status.host>
 				<hbm2ddl.auto>update</hbm2ddl.auto>
 			</properties>
 			<activation>
@@ -152,10 +152,22 @@
 		<profile>
 			<id>test</id>
 			<properties>
-				<db.url>localhost\:3306</db.url>
+				<db.url>localhost\:3307</db.url>
 				<db.user>root</db.user>
 				<db.pw>Ast4HS</db.pw>
 				<db.name>astvs1v20_db</db.name>
+				<log4j.rootLogger>info,myfile,myconsole</log4j.rootLogger>
+				<server.status.host></server.status.host>
+				<hbm2ddl.auto>update</hbm2ddl.auto>
+			</properties>
+		</profile>
+		<profile>
+			<id>master</id>
+			<properties>		
+				<db.url>localhost\:3306</db.url>
+				<db.user>root</db.user>
+				<db.pw>Ast4HS</db.pw>
+				<db.name>astvs1v20_db_master</db.name>
 				<log4j.rootLogger>info,myfile,myconsole</log4j.rootLogger>
 				<server.status.host></server.status.host>
 				<hbm2ddl.auto>none</hbm2ddl.auto>

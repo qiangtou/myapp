@@ -1,5 +1,6 @@
 package cn.jiuling.distributedmanagement.model;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 /**
@@ -25,7 +27,7 @@ public class User implements java.io.Serializable {
 	private String fullName;
 	private Long groupId;
 	private Boolean blocked;
-	private Long createId;
+	private BigInteger createId;
 	private Timestamp createTime;
 	private Integer taskPriority;
 	private Boolean updateTimeRegular;
@@ -33,6 +35,7 @@ public class User implements java.io.Serializable {
 	private Timestamp lastUpdatePasswordTime;
 	private Timestamp lastLoginTime;
 	private Integer totalLoginDuration;
+	private Integer logined;
 	private Integer loginCount;
 
 	// Constructors
@@ -49,7 +52,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(String name, String fullName, Long groupId, Boolean blocked, Long createId, Timestamp createTime, Integer taskPriority,
+	public User(String name, String fullName, Long groupId, Boolean blocked, BigInteger createId, Timestamp createTime, Integer taskPriority,
 			Boolean updateTimeRegular, String md5pwd, Timestamp lastUpdatePasswordTime, Timestamp lastLoginTime, Integer totalLoginDuration, Integer loginCount) {
 		this.name = name;
 		this.fullName = fullName;
@@ -116,11 +119,11 @@ public class User implements java.io.Serializable {
 	}
 
 	@Column(name = "create_id", nullable = false)
-	public Long getCreateId() {
+	public BigInteger getCreateId() {
 		return this.createId;
 	}
 
-	public void setCreateId(Long createId) {
+	public void setCreateId(BigInteger createId) {
 		this.createId = createId;
 	}
 
@@ -151,6 +154,7 @@ public class User implements java.io.Serializable {
 		this.updateTimeRegular = updateTimeRegular;
 	}
 
+	@JsonIgnore
 	@Column(name = "md5pwd", nullable = false, length = 256)
 	public String getMd5pwd() {
 		return this.md5pwd;
@@ -194,6 +198,15 @@ public class User implements java.io.Serializable {
 
 	public void setLoginCount(Integer loginCount) {
 		this.loginCount = loginCount;
+	}
+
+	@Column(name = "logined")
+	public Integer getLogined() {
+		return logined;
+	}
+
+	public void setLogined(Integer logined) {
+		this.logined = logined;
 	}
 
 }

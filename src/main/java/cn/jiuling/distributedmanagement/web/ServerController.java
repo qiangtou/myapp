@@ -19,6 +19,13 @@ import cn.jiuling.distributedmanagement.service.ServerService;
 import cn.jiuling.distributedmanagement.utils.HttpUtils;
 import cn.jiuling.distributedmanagement.utils.PropertiesUtils;
 
+/**
+ * 服务器Controller
+ * 
+ * @author phq
+ * 
+ * @date 2014-12-8
+ */
 @Controller
 @RequestMapping(value = "/server", method = RequestMethod.POST)
 public class ServerController {
@@ -26,11 +33,18 @@ public class ServerController {
 	@Resource
 	private ServerService serverService;
 
+	/**
+	 * 取得部门下的服务器列表.
+	 * 
+	 * @param deptId
+	 *            部门id
+	 * @return 该部门下的服务器列表
+	 */
 	@RequestMapping(value = "/list.do")
 	@ResponseBody
-	public List list(Integer deptId) {
+	public List list(Long deptId) {
 		List list = null;
-		if (null != deptId && 0 < deptId) {
+		if (null != deptId && deptId >= 0) {
 			list = serverService.getServerList(deptId);
 		}
 		return list;
@@ -40,8 +54,10 @@ public class ServerController {
 	@ResponseBody
 	public Result add(@RequestBody Server server) {
 		logger.info("add server");
-		serverService.saveOrUpdate(server);
-		return new Result(server);
+		if (null == server.getIsValid()) {
+			server.setIsValid(Server.VALID);
+		}
+		return new Result(serverService.add(server));
 	}
 
 	@RequestMapping(value = "/update.do")
@@ -64,15 +80,14 @@ public class ServerController {
 	@RequestMapping(value = "/status.do")
 	@ResponseBody
 	public String status(Integer serverId, float sid, HttpServletRequest request) {
-
 		// TODO 网址写死了,以后扩展api后再改过来
 		String host = PropertiesUtils.get("server.status.host");
 		if (StringUtils.isEmpty(host)) {
 			host = request.getScheme() + "://" + request.getServerName();
 		}
-		String url = host + "/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
-		logger.info("get server status start \n url is:" + url);
+		String url = host + "/master/querySlvNodeInfo.php?&type=2&id=" + serverId + "&sid=" + sid;
 		String status = HttpUtils.get(url);
+		logger.info("get server status start \n url:" + url + "\n,status:" + status);
 		return status;
 	}
 
